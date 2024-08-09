@@ -1,4 +1,5 @@
 import 'package:bidlotto/pages/home_user.dart';
+import 'package:bidlotto/pages/login.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Bidlotto',
-      home: const HomeUserPage(),
+      home: const LoginPage(),
     );
   }
 }
