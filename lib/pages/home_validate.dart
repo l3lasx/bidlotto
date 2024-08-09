@@ -92,11 +92,6 @@ class _HomeValidateState extends State<HomeValidate> {
                           ),
                         ),
                       ),
-                      Row(
-                        children: [
-                          
-                        ],
-                      )
                       const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(16),
