@@ -11,6 +11,8 @@ class _HomeValidateState extends State<HomeValidate> {
   int _selectedIndex = 0;
   final Color mainColor = const Color(0xFFE32321);
   final Color darkerColor = const Color(0xFF7D1312);
+  final TextEditingController _checkController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,40 +94,82 @@ class _HomeValidateState extends State<HomeValidate> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16),
                       Container(
-                        padding: const EdgeInsets.all(16),
+                        height: 60,
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [mainColor, darkerColor],
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Column(
-                          children: [
-                            for (int i = 1; i <= 5; i++)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('รางวัลที่ $i',
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 16)),
-                                    const Text('546564',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 16)),
-                                    Text('${7 - i} ล้านบาท',
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 16)),
-                                  ],
-                                ),
-                              ),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2), // สีของเงา
+                              spreadRadius: 2, // ระยะกระจายของเงา
+                              blurRadius: 10, // ความเบลอของเงา
+                              offset: const Offset(0, 5), // ตำแหน่งของเงา (X,Y)
+                            ),
                           ],
+                          borderRadius: BorderRadius.circular(
+                              30), // เพิ่มความโค้งให้กับมุมของ Container (ถ้าต้องการ)
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FilledButton(
+                                  onPressed: () {},
+                                  style: FilledButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 227, 35, 33),
+                                      minimumSize: const Size(165, 50)),
+                                  child: const Text(
+                                    'ตรวจผลรางวัล',
+                                    style: TextStyle(fontSize: 16),
+                                  )),
+                              FilledButton(
+                                  onPressed: () {},
+                                  style: FilledButton.styleFrom(
+                                      foregroundColor: Colors.black,
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 224, 217, 217),
+                                      minimumSize: const Size(165, 50)),
+                                  child: const Text(
+                                    'รายการรางวัล',
+                                    style: TextStyle(fontSize: 16),
+                                  ))
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: TextField(
+                          controller: _checkController,
+                          decoration: const InputDecoration(
+                            labelText: 'กรุณากรอก',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      FilledButton(
+                        onPressed: () {},
+                        style: FilledButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor:
+                              const Color.fromARGB(255, 227, 35, 33),
+                          minimumSize: const Size(
+                              double.infinity, 50), // กำหนดให้ปุ่มเต็มความกว้าง
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(10), // กำหนดมุมโค้งมน
+                          ),
+                        ),
+                        child: const Text(
+                          'ค้นหา',
+                          style: TextStyle(fontSize: 16),
                         ),
                       ),
                     ],
