@@ -172,227 +172,221 @@ class _HomeValidateState extends State<HomeValidate> {
                         ),
                       ),
                       const SizedBox(height: 30),
-                      isFirstButtonSelected
-                          ? Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: TextField(
-                                    keyboardType: TextInputType.number,
-                                    controller: _checkController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'กรุณากรอก',
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
+                      if (isFirstButtonSelected)
+                        Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: TextField(
+                                keyboardType: TextInputType.number,
+                                controller: _checkController,
+                                decoration: const InputDecoration(
+                                  labelText: 'กรุณากรอก',
+                                  border: OutlineInputBorder(),
                                 ),
-                                const SizedBox(
-                                  height: 10,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            FilledButton(
+                              onPressed: () {},
+                              style: FilledButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor:
+                                    const Color.fromARGB(255, 227, 35, 33),
+                                minimumSize: const Size(double.infinity,
+                                    50), // กำหนดให้ปุ่มเต็มความกว้าง
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      10), // กำหนดมุมโค้งมน
                                 ),
-                                FilledButton(
-                                  onPressed: () {},
-                                  style: FilledButton.styleFrom(
-                                    foregroundColor: Colors.white,
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 227, 35, 33),
-                                    minimumSize: const Size(double.infinity,
-                                        50), // กำหนดให้ปุ่มเต็มความกว้าง
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          10), // กำหนดมุมโค้งมน
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    'ค้นหา',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
+                              ),
+                              child: const Text(
+                                'ค้นหา',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        )
+                      else
+                        Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Card(
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                              ],
-                            )
-                          : Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Card(
-                                    elevation: 5,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color.fromARGB(255, 125, 19, 18),
+                                        Color.fromARGB(255, 227, 35, 33)
+                                      ], // เปลี่ยนสีตามต้องการ
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
                                     ),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        gradient: const LinearGradient(
-                                          colors: [
-                                            Color.fromARGB(255, 125, 19, 18),
-                                            Color.fromARGB(255, 227, 35, 33)
-                                          ], // เปลี่ยนสีตามต้องการ
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          '999999',
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              color: Colors.white),
                                         ),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(15.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             const Text(
-                                              '999999',
+                                              '1 สิงหาคม 2567',
                                               style: TextStyle(
-                                                  fontSize: 30,
-                                                  color: Colors.white),
+                                                  color: Color.fromARGB(
+                                                      255, 165, 165, 165)),
                                             ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                const Text(
-                                                  '1 สิงหาคม 2567',
-                                                  style: TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 165, 165, 165)),
-                                                ),
-                                                FilledButton(
-                                                    style:
-                                                        FilledButton.styleFrom(
-                                                            foregroundColor:
-                                                                Colors.white,
-                                                            backgroundColor:
-                                                                Colors.green),
-                                                    onPressed: () {},
-                                                    child:
-                                                        const Text('ถูกรางวัล'))
-                                              ],
-                                            )
+                                            FilledButton(
+                                                style: FilledButton.styleFrom(
+                                                    foregroundColor:
+                                                        Colors.white,
+                                                    backgroundColor:
+                                                        Colors.green),
+                                                onPressed: () {},
+                                                child: const Text('ถูกรางวัล'))
                                           ],
-                                        ),
-                                      ),
+                                        )
+                                      ],
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Card(
-                                    elevation: 5,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Card(
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color.fromARGB(255, 125, 19, 18),
+                                        Color.fromARGB(255, 227, 35, 33)
+                                      ], // เปลี่ยนสีตามต้องการ
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
                                     ),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        gradient: const LinearGradient(
-                                          colors: [
-                                            Color.fromARGB(255, 125, 19, 18),
-                                            Color.fromARGB(255, 227, 35, 33)
-                                          ], // เปลี่ยนสีตามต้องการ
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          '123456',
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              color: Colors.white),
                                         ),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(15.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             const Text(
-                                              '123456',
+                                              '1 สิงหาคม 2567',
                                               style: TextStyle(
-                                                  fontSize: 30,
-                                                  color: Colors.white),
+                                                  color: Color.fromARGB(
+                                                      255, 165, 165, 165)),
                                             ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                const Text(
-                                                  '1 สิงหาคม 2567',
-                                                  style: TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 165, 165, 165)),
-                                                ),
-                                                FilledButton(
-                                                    style:
-                                                        FilledButton.styleFrom(
-                                                            foregroundColor:
-                                                                Colors.white,
-                                                            backgroundColor:
-                                                                Colors.grey),
-                                                    onPressed: () {},
-                                                    child: const Text(
-                                                        'ไม่ถูกรางวัล'))
-                                              ],
-                                            )
+                                            FilledButton(
+                                                style: FilledButton.styleFrom(
+                                                    foregroundColor:
+                                                        Colors.white,
+                                                    backgroundColor:
+                                                        Colors.grey),
+                                                onPressed: () {},
+                                                child:
+                                                    const Text('ไม่ถูกรางวัล'))
                                           ],
-                                        ),
-                                      ),
+                                        )
+                                      ],
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Card(
-                                    elevation: 5,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Card(
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color.fromARGB(255, 125, 19, 18),
+                                        Color.fromARGB(255, 227, 35, 33)
+                                      ], // เปลี่ยนสีตามต้องการ
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
                                     ),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        gradient: const LinearGradient(
-                                          colors: [
-                                            Color.fromARGB(255, 125, 19, 18),
-                                            Color.fromARGB(255, 227, 35, 33)
-                                          ], // เปลี่ยนสีตามต้องการ
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          '654321',
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              color: Colors.white),
                                         ),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(15.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             const Text(
-                                              '654321',
+                                              '1 สิงหาคม 2567',
                                               style: TextStyle(
-                                                  fontSize: 30,
-                                                  color: Colors.white),
+                                                  color: Color.fromARGB(
+                                                      255, 165, 165, 165)),
                                             ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                const Text(
-                                                  '1 สิงหาคม 2567',
-                                                  style: TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 165, 165, 165)),
-                                                ),
-                                                FilledButton(
-                                                    style:
-                                                        FilledButton.styleFrom(
-                                                            foregroundColor:
-                                                                Colors.white,
-                                                            backgroundColor:
-                                                                Colors.grey),
-                                                    onPressed: () {},
-                                                    child: const Text(
-                                                        'ไม่ถูกรางวัล'))
-                                              ],
-                                            )
+                                            FilledButton(
+                                                style: FilledButton.styleFrom(
+                                                    foregroundColor:
+                                                        Colors.white,
+                                                    backgroundColor:
+                                                        Colors.grey),
+                                                onPressed: () {},
+                                                child:
+                                                    const Text('ไม่ถูกรางวัล'))
                                           ],
-                                        ),
-                                      ),
+                                        )
+                                      ],
                                     ),
                                   ),
                                 ),
-                              ],
-                            )
+                              ),
+                            ),
+                          ],
+                        )
                     ],
                   ),
                 ),
