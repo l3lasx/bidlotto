@@ -12,6 +12,9 @@ class _HomeValidateState extends State<HomeValidate> {
   final Color mainColor = const Color(0xFFE32321);
   final Color darkerColor = const Color(0xFF7D1312);
   final TextEditingController _checkController = TextEditingController();
+  bool isFirstButtonSelected = true; // ตัวแปรเพื่อเก็บสถานะการเลือกของปุ่มแรก
+  bool isSecondButtonSelected =
+      false; // ตัวแปรเพื่อเก็บสถานะการเลือกของปุ่มที่สอง
 
   @override
   Widget build(BuildContext context) {
@@ -115,27 +118,55 @@ class _HomeValidateState extends State<HomeValidate> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               FilledButton(
-                                  onPressed: () {},
-                                  style: FilledButton.styleFrom(
-                                      foregroundColor: Colors.white,
-                                      backgroundColor: const Color.fromARGB(
-                                          255, 227, 35, 33),
-                                      minimumSize: const Size(165, 50)),
-                                  child: const Text(
-                                    'ตรวจผลรางวัล',
-                                    style: TextStyle(fontSize: 16),
-                                  )),
+                                onPressed: () {
+                                  setState(() {
+                                    isFirstButtonSelected =
+                                        true; // ตั้งค่าให้ปุ่มแรกเป็น selected
+                                    isSecondButtonSelected =
+                                        false; // ปุ่มที่สองเป็น unselected
+                                  });
+                                },
+                                style: FilledButton.styleFrom(
+                                  foregroundColor: isFirstButtonSelected
+                                      ? Colors.white // สีสำหรับ selected
+                                      : Colors.black, // สีสำหรับ unselected,
+                                  backgroundColor: isFirstButtonSelected
+                                      ? const Color.fromARGB(
+                                          255, 227, 35, 33) // สีสำหรับ selected
+                                      : const Color.fromARGB(255, 224, 217,
+                                          217), // สีสำหรับ unselected
+                                  minimumSize: const Size(165, 50),
+                                ),
+                                child: const Text(
+                                  'ตรวจผลรางวัล',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
                               FilledButton(
-                                  onPressed: () {},
-                                  style: FilledButton.styleFrom(
-                                      foregroundColor: Colors.black,
-                                      backgroundColor: const Color.fromARGB(
-                                          255, 224, 217, 217),
-                                      minimumSize: const Size(165, 50)),
-                                  child: const Text(
-                                    'รายการรางวัล',
-                                    style: TextStyle(fontSize: 16),
-                                  ))
+                                onPressed: () {
+                                  setState(() {
+                                    isFirstButtonSelected =
+                                        false; // ปุ่มแรกเป็น unselected
+                                    isSecondButtonSelected =
+                                        true; // ตั้งค่าให้ปุ่มที่สองเป็น selected
+                                  });
+                                },
+                                style: FilledButton.styleFrom(
+                                  foregroundColor: isSecondButtonSelected
+                                      ? Colors.white // สีสำหรับ selected
+                                      : Colors.black,
+                                  backgroundColor: isSecondButtonSelected
+                                      ? const Color.fromARGB(
+                                          255, 227, 35, 33) // สีสำหรับ selected
+                                      : const Color.fromARGB(255, 224, 217,
+                                          217), // สีสำหรับ unselected
+                                  minimumSize: const Size(165, 50),
+                                ),
+                                child: const Text(
+                                  'รายการรางวัล',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
                             ],
                           ),
                         ),
