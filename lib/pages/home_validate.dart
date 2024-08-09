@@ -144,6 +144,7 @@ class _HomeValidateState extends State<HomeValidate> {
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: TextField(
+                          keyboardType: TextInputType.number,
                           controller: _checkController,
                           decoration: const InputDecoration(
                             labelText: 'กรุณากรอก',
