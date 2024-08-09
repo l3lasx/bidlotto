@@ -1,3 +1,4 @@
+import 'package:bidlotto/pages/home_validate.dart';
 import 'package:flutter/material.dart';
 
 class HomeUserPage extends StatefulWidget {
@@ -90,7 +91,12 @@ class _HomeUserPageState extends State<HomeUserPage> {
                             style: TextStyle(fontSize: 16),
                           ),
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => const HomeValidate()),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
                               backgroundColor: Colors.black,
