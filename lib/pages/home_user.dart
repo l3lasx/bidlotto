@@ -91,11 +91,8 @@ class _HomeUserPageState extends State<HomeUserPage> {
                             style: TextStyle(fontSize: 16),
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => const HomeValidate()),
-                              );
+                            onPressed: () => {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeValidate()))
                             },
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,

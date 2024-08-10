@@ -18,7 +18,8 @@ class _LoginPageState extends State<LoginPage> {
 
   void _handleLogin() {
     if (_phoneController.text == '1' && _passwordController.text == '1') {
-      Navigator.of(context).pushReplacement(
+      Navigator.push(
+        context,
         MaterialPageRoute(builder: (context) => const HomeUserPage()),
       );
     } else {
@@ -41,7 +42,8 @@ class _LoginPageState extends State<LoginPage> {
         ),
         child: SafeArea(
           child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints viewportConstraints) {
+            builder:
+                (BuildContext context, BoxConstraints viewportConstraints) {
               return SingleChildScrollView(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
@@ -57,7 +59,8 @@ class _LoginPageState extends State<LoginPage> {
                           const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.motorcycle, color: Colors.white, size: 24),
+                              Icon(Icons.motorcycle,
+                                  color: Colors.white, size: 24),
                               SizedBox(width: 8),
                               Text(
                                 'Bidlotto',
@@ -80,13 +83,15 @@ class _LoginPageState extends State<LoginPage> {
                                 padding: const EdgeInsets.all(16),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   children: [
                                     const Center(
                                       child: Text(
                                         'เข้าสู่ระบบ',
                                         style: TextStyle(
-                                            fontSize: 18, fontWeight: FontWeight.bold),
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                     const SizedBox(height: 40),
@@ -110,7 +115,8 @@ class _LoginPageState extends State<LoginPage> {
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: mainColor,
-                                        padding: const EdgeInsets.symmetric(vertical: 16),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 16),
                                       ),
                                       onPressed: _handleLogin,
                                       child: const Text(
@@ -126,7 +132,8 @@ class _LoginPageState extends State<LoginPage> {
                                       onPressed: () {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
-                                              builder: (context) => const RegisterPage()),
+                                              builder: (context) =>
+                                                  const RegisterPage()),
                                         );
                                       },
                                       child: const Text(
