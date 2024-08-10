@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class HomeValidate extends StatefulWidget {
@@ -15,6 +17,8 @@ class _HomeValidateState extends State<HomeValidate> {
   bool isFirstButtonSelected = true; // ตัวแปรเพื่อเก็บสถานะการเลือกของปุ่มแรก
   bool isSecondButtonSelected =
       false; // ตัวแปรเพื่อเก็บสถานะการเลือกของปุ่มที่สอง
+  bool showResult = false;
+  bool checkValidate = false;
 
   @override
   Widget build(BuildContext context) {
@@ -182,31 +186,140 @@ class _HomeValidateState extends State<HomeValidate> {
                                 controller: _checkController,
                                 decoration: const InputDecoration(
                                   labelText: 'กรุณากรอก',
-                                  border: OutlineInputBorder(),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15))),
                                 ),
                               ),
                             ),
                             const SizedBox(
                               height: 10,
                             ),
-                            FilledButton(
-                              onPressed: () {},
-                              style: FilledButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor:
-                                    const Color.fromARGB(255, 227, 35, 33),
-                                minimumSize: const Size(double.infinity,
-                                    50), // กำหนดให้ปุ่มเต็มความกว้าง
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      10), // กำหนดมุมโค้งมน
-                                ),
-                              ),
-                              child: const Text(
-                                'ค้นหา',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
+                            !showResult
+                                ? FilledButton(
+                                    onPressed: validate,
+                                    style: FilledButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 227, 35, 33),
+                                      minimumSize: const Size(double.infinity,
+                                          50), // กำหนดให้ปุ่มเต็มความกว้าง
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            15), // กำหนดมุมโค้งมน
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'ค้นหา',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  )
+                                : !checkValidate
+                                    ? Column(
+                                        children: [
+                                          Image.asset('assets/images/sad.png'),
+                                          const Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 20, bottom: 20),
+                                            child: Center(
+                                              child: Text(
+                                                'เสียใจด้วยคุณพลาดเงินล้าน !',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w900,
+                                                    fontSize: 25),
+                                              ),
+                                            ),
+                                          ),
+                                          FilledButton(
+                                            onPressed: validate,
+                                            style: FilledButton.styleFrom(
+                                              foregroundColor: Colors.white,
+                                              backgroundColor:
+                                                  const Color.fromARGB(
+                                                      255, 227, 35, 33),
+                                              minimumSize: const Size(
+                                                  double.infinity,
+                                                  50), // กำหนดให้ปุ่มเต็มความกว้าง
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        15), // กำหนดมุมโค้งมน
+                                              ),
+                                            ),
+                                            child: const Text(
+                                              'ตรวจสอบอีกครั้ง',
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    : Column(
+                                        children: [
+                                          Image.asset(
+                                              'assets/images/happy.png'),
+                                          const Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 20, bottom: 10),
+                                            child: Center(
+                                              child: Text(
+                                                'ยินดีด้วยคุณถูกลอตเตอรี่ !',
+                                                style: TextStyle(
+                                                    color: Colors.blue,
+                                                    fontWeight: FontWeight.w900,
+                                                    fontSize: 25),
+                                              ),
+                                            ),
+                                          ),
+                                          FilledButton(
+                                            onPressed: validate,
+                                            style: FilledButton.styleFrom(
+                                              foregroundColor: Colors.white,
+                                              backgroundColor:
+                                                  const Color.fromARGB(
+                                                      255, 227, 35, 33),
+                                              minimumSize: const Size(
+                                                  double.infinity,
+                                                  50), // กำหนดให้ปุ่มเต็มความกว้าง
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        15), // กำหนดมุมโค้งมน
+                                              ),
+                                            ),
+                                            child: const Text(
+                                              'ตรวจสอบอีกครั้ง',
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          FilledButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                isFirstButtonSelected = false;
+                                                isSecondButtonSelected = true;
+                                              });
+                                            },
+                                            style: FilledButton.styleFrom(
+                                              foregroundColor: Colors.white,
+                                              backgroundColor: Colors.blue,
+                                              minimumSize: const Size(
+                                                  double.infinity,
+                                                  50), // กำหนดให้ปุ่มเต็มความกว้าง
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        15), // กำหนดมุมโค้งมน
+                                              ),
+                                            ),
+                                            child: const Text(
+                                              'ขึ้นรางวัล',
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                          )
+                                        ],
+                                      )
                           ],
                         )
                       else
@@ -431,5 +544,16 @@ class _HomeValidateState extends State<HomeValidate> {
         });
       },
     );
+  }
+
+  void validate() {
+    setState(() {
+      showResult = true;
+      if (int.parse(_checkController.text) == 111111) {
+        checkValidate = true;
+      } else {
+        checkValidate = false;
+      }
+    });
   }
 }
