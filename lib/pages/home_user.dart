@@ -87,7 +87,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            'งวดวันที่ 16 สิงหาคม 2567',
+                            'งวดวันที่ \n16 สิงหาคม 2567',
                             style: TextStyle(fontSize: 16),
                           ),
                           ElevatedButton(
