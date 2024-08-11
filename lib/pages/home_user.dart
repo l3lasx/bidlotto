@@ -78,6 +78,8 @@ class _HomeUserPageState extends State<HomeUserPage> {
               left: 8,
               right: 8,
               child: Card(
+                color: Colors.white,
+                elevation: 8,
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -92,7 +94,11 @@ class _HomeUserPageState extends State<HomeUserPage> {
                           ),
                           ElevatedButton(
                             onPressed: () => {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeValidate()))
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const HomeValidate()))
                             },
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
