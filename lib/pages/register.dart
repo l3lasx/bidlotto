@@ -1,10 +1,9 @@
 // ignore_for_file: unused_element
-
-import 'package:bidlotto/pages/home_user.dart';
 import 'package:bidlotto/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bidlotto/utils/getErrorMessage.dart';
+import 'package:go_router/go_router.dart';
 
 class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({super.key});
@@ -48,10 +47,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         .read(authServiceProvider.notifier)
         .register(firstName, lastName, phone, password, passwordConfirmation);
     if (response['statusCode'] == 201) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeUserPage()),
-      );
+      context.go('/home');
       showSuccessMessage('Registration successful!', context);
     } else {
       showErrorMessage(getErrorMessage(response), context);

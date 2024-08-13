@@ -1,11 +1,9 @@
 // ignore_for_file: use_build_context_synchronously, unused_element
-
-import 'package:bidlotto/pages/home_user.dart';
-import 'package:bidlotto/pages/register.dart';
 import 'package:bidlotto/services/auth.dart';
 import 'package:bidlotto/utils/getErrorMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -31,10 +29,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         showErrorMessage(getErrorMessage(response), context);
       }
       if (response['statusCode'] == 200) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeUserPage()),
-        );
+        context.go('/home');
       }
     } else {
       showErrorMessage('Please fill in all required fields.', context);
@@ -142,11 +137,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                     const SizedBox(height: 16),
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RegisterPage()),
-                                        );
+                                        context.push('/register');
                                       },
                                       child: const Text(
                                         'สมัครสมาชิก',
