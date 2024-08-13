@@ -1,20 +1,23 @@
 import 'package:bidlotto/pages/home_validate.dart';
+import 'package:bidlotto/services/api/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeUserPage extends StatefulWidget {
+class HomeUserPage extends ConsumerStatefulWidget {
   const HomeUserPage({super.key});
 
   @override
-  State<HomeUserPage> createState() => _HomeUserPageState();
+  ConsumerState<HomeUserPage> createState() => _HomeUserPageState();
 }
 
-class _HomeUserPageState extends State<HomeUserPage> {
+class _HomeUserPageState extends ConsumerState<HomeUserPage> {
   int _selectedIndex = 0;
   final Color mainColor = const Color(0xFFE32321);
   final Color darkerColor = const Color(0xFF7D1312); // สีเข้มขึ้นเล็กน้อย
 
   @override
   Widget build(BuildContext context) {
+    final apiService = ref.read(userServiceProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mainColor,
@@ -94,11 +97,12 @@ class _HomeUserPageState extends State<HomeUserPage> {
                           ),
                           ElevatedButton(
                             onPressed: () => {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const HomeValidate()))
+                              apiService.someApiCall()
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) =>
+                              //             const HomeValidate()))
                             },
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
