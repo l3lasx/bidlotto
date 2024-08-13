@@ -1,31 +1,38 @@
-import 'package:bidlotto/pages/home_user.dart';
-import 'package:bidlotto/pages/register.dart';
+// ignore_for_file: use_build_context_synchronously, unused_element
+import 'package:bidlotto/services/auth.dart';
+import 'package:bidlotto/utils/getErrorMessage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final Color mainColor = const Color(0xFFE32321);
   final Color darkerColor = const Color(0xFF7D1312);
 
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _handleLogin() {
-    if (_phoneController.text == '1' && _passwordController.text == '1') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeUserPage()),
-      );
+  void _handleLogin() async {
+    final phone = _phoneController.text;
+    final password = _passwordController.text;
+    if (phone.isNotEmpty && password.isNotEmpty) {
+      final response =
+          await ref.read(authServiceProvider.notifier).login(phone, password);
+      if (response['statusCode'] != 200) {
+        showErrorMessage(getErrorMessage(response), context);
+      }
+      if (response['statusCode'] == 200) {
+        context.go('/home');
+      }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid credentials. Please try again.')),
-      );
+      showErrorMessage('Please fill in all required fields.', context);
     }
   }
 
@@ -130,11 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                                     const SizedBox(height: 16),
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const RegisterPage()),
-                                        );
+                                        context.push('/register');
                                       },
                                       child: const Text(
                                         'สมัครสมาชิก',
@@ -144,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    ),
+                                    )
                                   ],
                                 ),
                               ),
