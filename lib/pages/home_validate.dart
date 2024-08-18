@@ -174,22 +174,16 @@ class _HomeValidateState extends State<HomeValidate> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 30),
+                              const SizedBox(height: 20),
                               if (isFirstButtonSelected)
                                 Column(
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                      child: TextField(
-                                        keyboardType: TextInputType.number,
-                                        controller: _checkController,
-                                        decoration: const InputDecoration(
-                                          labelText: 'กรุณากรอก',
-                                          border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(15))),
-                                        ),
-                                      ),
+                                    LotteryNumberInput(
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _checkController.text = value;
+                                        });
+                                      },
                                     ),
                                     const SizedBox(height: 10),
                                     if (!showResult)
@@ -599,11 +593,86 @@ class _HomeValidateState extends State<HomeValidate> {
   void validate() {
     setState(() {
       showResult = true;
-      if (int.parse(_checkController.text) == 999999) {
-        checkValidate = true;
+      if (_checkController.text.length == 6) {
+        if (int.parse(_checkController.text) == 999999) {
+          checkValidate = true;
+        } else {
+          checkValidate = false;
+        }
       } else {
         checkValidate = false;
       }
     });
+  }
+}
+
+class LotteryNumberInput extends StatefulWidget {
+  final Function(String) onChanged;
+
+  const LotteryNumberInput({Key? key, required this.onChanged}) : super(key: key);
+
+  @override
+  _LotteryNumberInputState createState() => _LotteryNumberInputState();
+}
+
+class _LotteryNumberInputState extends State<LotteryNumberInput> {
+  List<TextEditingController> controllers = List.generate(6, (_) => TextEditingController());
+  List<FocusNode> focusNodes = List.generate(6, (_) => FocusNode());
+
+  @override
+  void initState() {
+    super.initState();
+    for (int i = 0; i < 6; i++) {
+      controllers[i].addListener(() {
+        setState(() {});
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: List.generate(6, (index) {
+        return SizedBox(
+          width: 55,
+          child: TextFormField(
+            controller: controllers[index],
+            focusNode: focusNodes[index],
+            keyboardType: TextInputType.number,
+            textAlign: TextAlign.center,
+            maxLength: 1,
+            decoration: InputDecoration(
+              counterText: "",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            onChanged: (value) {
+              if (value.isNotEmpty && index < 5) {
+                focusNodes[index + 1].requestFocus();
+              }
+              widget.onChanged(controllers.map((c) => c.text).join());
+            },
+            onFieldSubmitted: (_) {
+              if (index < 5) {
+                focusNodes[index + 1].requestFocus();
+              }
+            },
+          ),
+        );
+      }),
+    );
+  }
+
+  @override
+  void dispose() {
+    for (var controller in controllers) {
+      controller.dispose();
+    }
+    for (var focusNode in focusNodes) {
+      focusNode.dispose();
+    }
+    super.dispose();
   }
 }
