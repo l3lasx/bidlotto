@@ -11,6 +11,9 @@ class _WalletPageState extends State<WalletPage> {
   final Color mainColor = const Color(0xFFE32321);
   final Color darkerColor = const Color(0xFF7D1312);
 
+  // เพิ่มตัวแปรเพื่อติดตามสถานะของปุ่มที่ถูกเลือก
+  bool showAllOrders = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,11 +78,10 @@ class _WalletPageState extends State<WalletPage> {
               left: 8,
               right: 8,
               child: Card(
-                color: Colors.white, // กำหนดสีพื้นหลังเป็นสีขาว
-                elevation: 4, // เพิ่ม elevation เพื่อให้เห็นเงาชัดเจนขึ้น
+                color: Colors.white,
+                elevation: 4,
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(12), // ปรับมุมให้โค้งมนขึ้น
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
@@ -121,39 +123,104 @@ class _WalletPageState extends State<WalletPage> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: mainColor,
-                                foregroundColor: Colors.white,
-                              ),
-                              child: const Text('ลอตเตอรี่ทั้งหมด'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 290,
+              left: 8,
+              right: 8,
+              child: Card(
+                color: Colors.white,
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
                             ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.grey[300],
-                                foregroundColor: Colors.black,
+                          ],
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  // อัปเดต onPressed เพื่อเปลี่ยนสถานะ showAllOrders
+                                  onPressed: () {
+                                    setState(() {
+                                      showAllOrders = true;
+                                    });
+                                  },
+                                  // ปรับสีปุ่มตามสถานะ showAllOrders
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: showAllOrders
+                                        ? mainColor
+                                        : Colors.grey[300],
+                                    foregroundColor: showAllOrders
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                  child: const Text('ออเดอร์ทั้งหมด', style: TextStyle(fontSize: 16)),
+                                ),
                               ),
-                              child: const Text('ลอตเตอรี่ทั้งหมด'),
-                            ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: ElevatedButton(
+                                  // อัปเดต onPressed เพื่อเปลี่ยนสถานะ showAllOrders
+                                  onPressed: () {
+                                    setState(() {
+                                      showAllOrders = false;
+                                    });
+                                  },
+                                  // ปรับสีปุ่มตามสถานะ showAllOrders
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: !showAllOrders
+                                        ? mainColor
+                                        : Colors.grey[300],
+                                    foregroundColor: !showAllOrders
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                  child: const Text('ลอตเตอรี่ทั้งหมด', style: TextStyle(fontSize: 16)),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      const Center(
-                        child: Text(
-                          'ไม่พบคำสั่งซื้อในขณะนี้',
-                          style: TextStyle(color: Colors.grey),
                         ),
                       ),
+                      const SizedBox(height: 16),
+                      // แสดงข้อความต่างกันตามสถานะของ showAllOrders
+                      if (showAllOrders)
+                        const Center(
+                          child: Text(
+                            'ไม่พบคำสั่งซื้อในขณะนี้',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        )
+                      else
+                        const Center(
+                          child: Text(
+                            'ไม่พบลอตเตอรี่ในขณะนี้',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
                     ],
                   ),
                 ),
