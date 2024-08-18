@@ -8,7 +8,6 @@ class WalletPage extends StatefulWidget {
 }
 
 class _WalletPageState extends State<WalletPage> {
-  int _selectedIndex = 0;
   final Color mainColor = const Color(0xFFE32321);
   final Color darkerColor = const Color(0xFF7D1312);
 
@@ -76,12 +75,20 @@ class _WalletPageState extends State<WalletPage> {
               left: 8,
               right: 8,
               child: Card(
+                color: Colors.white, // กำหนดสีพื้นหลังเป็นสีขาว
+                elevation: 4, // เพิ่ม elevation เพื่อให้เห็นเงาชัดเจนขึ้น
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(12), // ปรับมุมให้โค้งมนขึ้น
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text('กระเป๋าของฉัน', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const Text('กระเป๋าของฉัน',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(16),
@@ -95,8 +102,12 @@ class _WalletPageState extends State<WalletPage> {
                             const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('เครดิตที่เหลือ', style: TextStyle(fontSize: 16)),
-                                Text('1,000 บาท', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                Text('เครดิตที่เหลือ',
+                                    style: TextStyle(fontSize: 16)),
+                                Text('1,000 บาท',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
                               ],
                             ),
                             ElevatedButton(
@@ -151,40 +162,6 @@ class _WalletPageState extends State<WalletPage> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [mainColor, darkerColor],
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildNavButton(Icons.home, 0),
-              _buildNavButton(Icons.search, 1),
-              _buildNavButton(Icons.shopping_cart, 2),
-              _buildNavButton(Icons.book, 3),
-              _buildNavButton(Icons.check, 4),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavButton(IconData icon, int index) {
-    return IconButton(
-      icon: Icon(icon),
-      color: _selectedIndex == index ? Colors.white : Colors.white70,
-      onPressed: () {
-        setState(() {
-          _selectedIndex = index;
-        });
-      },
     );
   }
 }

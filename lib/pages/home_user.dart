@@ -1,7 +1,7 @@
-import 'package:bidlotto/pages/home_validate.dart';
 import 'package:bidlotto/services/api/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeUserPage extends ConsumerStatefulWidget {
   const HomeUserPage({super.key});
@@ -11,7 +11,6 @@ class HomeUserPage extends ConsumerStatefulWidget {
 }
 
 class _HomeUserPageState extends ConsumerState<HomeUserPage> {
-  int _selectedIndex = 0;
   final Color mainColor = const Color(0xFFE32321);
   final Color darkerColor = const Color(0xFF7D1312); // สีเข้มขึ้นเล็กน้อย
 
@@ -97,12 +96,8 @@ class _HomeUserPageState extends ConsumerState<HomeUserPage> {
                           ),
                           ElevatedButton(
                             onPressed: () => {
-                              apiService.someApiCall()
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) =>
-                              //             const HomeValidate()))
+                              apiService.getAllUser(),
+                              context.push('/validate')
                             },
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
@@ -159,41 +154,6 @@ class _HomeUserPageState extends ConsumerState<HomeUserPage> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [mainColor, darkerColor],
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildNavButton(Icons.home, 0),
-              _buildNavButton(Icons.search, 1),
-              _buildNavButton(Icons.shopping_cart, 2),
-              _buildNavButton(Icons.book, 3),
-              _buildNavButton(Icons.check, 4),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // สร้างฟังก์ชันนี้นอกจาก build method
-  Widget _buildNavButton(IconData icon, int index) {
-    return IconButton(
-      icon: Icon(icon),
-      color: _selectedIndex == index ? Colors.white : Colors.white70,
-      onPressed: () {
-        setState(() {
-          _selectedIndex = index;
-        });
-      },
     );
   }
 }

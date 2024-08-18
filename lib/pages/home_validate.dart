@@ -8,13 +8,11 @@ class HomeValidate extends StatefulWidget {
 }
 
 class _HomeValidateState extends State<HomeValidate> {
-  int _selectedIndex = 0;
   final Color mainColor = const Color(0xFFE32321);
   final Color darkerColor = const Color(0xFF7D1312);
   final TextEditingController _checkController = TextEditingController();
-  bool isFirstButtonSelected = true; // ตัวแปรเพื่อเก็บสถานะการเลือกของปุ่มแรก
-  bool isSecondButtonSelected =
-      false; // ตัวแปรเพื่อเก็บสถานะการเลือกของปุ่มที่สอง
+  bool isFirstButtonSelected = true;
+  bool isSecondButtonSelected = false;
   bool showResult = false;
   bool checkValidate = false;
   bool getReward = false;
@@ -75,12 +73,11 @@ class _HomeValidateState extends State<HomeValidate> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                    height: 600), // เพิ่มพื้นที่ว่างสำหรับ Card ที่จะเกยขึ้นมา
+                const SizedBox(height: 600),
               ],
             ),
             Positioned(
-              top: 120, // ปรับตำแหน่งตามต้องการ
+              top: 120,
               left: 8,
               right: 8,
               child: Card(
@@ -108,16 +105,13 @@ class _HomeValidateState extends State<HomeValidate> {
                                   color: Colors.white,
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black
-                                          .withOpacity(0.2), // สีของเงา
-                                      spreadRadius: 2, // ระยะกระจายของเงา
-                                      blurRadius: 10, // ความเบลอของเงา
-                                      offset: const Offset(
-                                          0, 5), // ตำแหน่งของเงา (X,Y)
+                                      color: Colors.black.withOpacity(0.2),
+                                      spreadRadius: 2,
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 5),
                                     ),
                                   ],
-                                  borderRadius: BorderRadius.circular(
-                                      30), // เพิ่มความโค้งให้กับมุมของ Container (ถ้าต้องการ)
+                                  borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -127,27 +121,20 @@ class _HomeValidateState extends State<HomeValidate> {
                                         child: FilledButton(
                                           onPressed: () {
                                             setState(() {
-                                              isFirstButtonSelected =
-                                                  true; // ตั้งค่าให้ปุ่มแรกเป็น selected
-                                              isSecondButtonSelected =
-                                                  false; // ปุ่มที่สองเป็น unselected
+                                              isFirstButtonSelected = true;
+                                              isSecondButtonSelected = false;
                                             });
                                           },
                                           style: FilledButton.styleFrom(
                                             foregroundColor:
                                                 isFirstButtonSelected
-                                                    ? Colors
-                                                        .white // สีสำหรับ selected
-                                                    : Colors
-                                                        .black, // สีสำหรับ unselected,
+                                                    ? Colors.white
+                                                    : Colors.black,
                                             backgroundColor:
                                                 isFirstButtonSelected
-                                                    ? mainColor // สีสำหรับ selected
+                                                    ? mainColor
                                                     : const Color.fromARGB(
-                                                        255,
-                                                        224,
-                                                        217,
-                                                        217), // สีสำหรับ unselected
+                                                        255, 224, 217, 217),
                                             minimumSize: const Size(165, 50),
                                           ),
                                           child: const Text(
@@ -156,33 +143,25 @@ class _HomeValidateState extends State<HomeValidate> {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(
-                                        width: 8,
-                                      ),
+                                      const SizedBox(width: 8),
                                       Expanded(
                                         child: FilledButton(
                                           onPressed: () {
                                             setState(() {
-                                              isFirstButtonSelected =
-                                                  false; // ปุ่มแรกเป็น unselected
-                                              isSecondButtonSelected =
-                                                  true; // ตั้งค่าให้ปุ่มที่สองเป็น selected
+                                              isFirstButtonSelected = false;
+                                              isSecondButtonSelected = true;
                                             });
                                           },
                                           style: FilledButton.styleFrom(
                                             foregroundColor:
                                                 isSecondButtonSelected
-                                                    ? Colors
-                                                        .white // สีสำหรับ selected
+                                                    ? Colors.white
                                                     : Colors.black,
                                             backgroundColor:
                                                 isSecondButtonSelected
-                                                    ? mainColor // สีสำหรับ selected
+                                                    ? mainColor
                                                     : const Color.fromARGB(
-                                                        255,
-                                                        224,
-                                                        217,
-                                                        217), // สีสำหรับ unselected
+                                                        255, 224, 217, 217),
                                             minimumSize: const Size(0, 50),
                                           ),
                                           child: const Text(
@@ -212,21 +191,18 @@ class _HomeValidateState extends State<HomeValidate> {
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
+                                    const SizedBox(height: 10),
                                     if (!showResult)
                                       FilledButton(
                                         onPressed: validate,
                                         style: FilledButton.styleFrom(
                                           foregroundColor: Colors.white,
                                           backgroundColor: mainColor,
-                                          minimumSize: const Size(
-                                              double.infinity,
-                                              50), // กำหนดให้ปุ่มเต็มความกว้าง
+                                          minimumSize:
+                                              const Size(double.infinity, 50),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                15), // กำหนดมุมโค้งมน
+                                            borderRadius:
+                                                BorderRadius.circular(15),
                                           ),
                                         ),
                                         child: const Text(
@@ -260,13 +236,12 @@ class _HomeValidateState extends State<HomeValidate> {
                                                         Colors.white,
                                                     backgroundColor: mainColor,
                                                     minimumSize: const Size(
-                                                        double.infinity,
-                                                        50), // กำหนดให้ปุ่มเต็มความกว้าง
+                                                        double.infinity, 50),
                                                     shape:
                                                         RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              15), // กำหนดมุมโค้งมน
+                                                              15),
                                                     ),
                                                   ),
                                                   child: const Text(
@@ -302,13 +277,12 @@ class _HomeValidateState extends State<HomeValidate> {
                                                         Colors.white,
                                                     backgroundColor: mainColor,
                                                     minimumSize: const Size(
-                                                        double.infinity,
-                                                        50), // กำหนดให้ปุ่มเต็มความกว้าง
+                                                        double.infinity, 50),
                                                     shape:
                                                         RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              15), // กำหนดมุมโค้งมน
+                                                              15),
                                                     ),
                                                   ),
                                                   child: const Text(
@@ -317,9 +291,7 @@ class _HomeValidateState extends State<HomeValidate> {
                                                         TextStyle(fontSize: 16),
                                                   ),
                                                 ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
+                                                const SizedBox(height: 5),
                                                 FilledButton(
                                                   onPressed: () {
                                                     setState(() {
@@ -332,13 +304,12 @@ class _HomeValidateState extends State<HomeValidate> {
                                                     backgroundColor:
                                                         Colors.blue,
                                                     minimumSize: const Size(
-                                                        double.infinity,
-                                                        50), // กำหนดให้ปุ่มเต็มความกว้าง
+                                                        double.infinity, 50),
                                                     shape:
                                                         RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              15), // กำหนดมุมโค้งมน
+                                                              15),
                                                     ),
                                                   ),
                                                   child: const Text(
@@ -365,10 +336,7 @@ class _HomeValidateState extends State<HomeValidate> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             gradient: LinearGradient(
-                                              colors: [
-                                                darkerColor,
-                                                mainColor
-                                              ], // เปลี่ยนสีตามต้องการ
+                                              colors: [darkerColor, mainColor],
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,
                                             ),
@@ -432,10 +400,7 @@ class _HomeValidateState extends State<HomeValidate> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             gradient: LinearGradient(
-                                              colors: [
-                                                darkerColor,
-                                                mainColor
-                                              ], // เปลี่ยนสีตามต้องการ
+                                              colors: [darkerColor, mainColor],
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,
                                             ),
@@ -499,10 +464,7 @@ class _HomeValidateState extends State<HomeValidate> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             gradient: LinearGradient(
-                                              colors: [
-                                                darkerColor,
-                                                mainColor
-                                              ], // เปลี่ยนสีตามต้องการ
+                                              colors: [darkerColor, mainColor],
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,
                                             ),
@@ -581,9 +543,7 @@ class _HomeValidateState extends State<HomeValidate> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(
-                                height: 10,
-                              ),
+                              const SizedBox(height: 10),
                               Center(
                                 child: Column(
                                   children: [
@@ -597,13 +557,9 @@ class _HomeValidateState extends State<HomeValidate> {
                                     ),
                                     const Text(
                                       'เงินรางวัล 1,000,000฿',
-                                      style: TextStyle(
-                                        fontSize: 25,
-                                      ),
+                                      style: TextStyle(fontSize: 25),
                                     ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
+                                    const SizedBox(height: 10),
                                     FilledButton(
                                       onPressed: () {
                                         setState(() {
@@ -615,11 +571,11 @@ class _HomeValidateState extends State<HomeValidate> {
                                       style: FilledButton.styleFrom(
                                         foregroundColor: Colors.white,
                                         backgroundColor: mainColor,
-                                        minimumSize: const Size(double.infinity,
-                                            50), // กำหนดให้ปุ่มเต็มความกว้าง
+                                        minimumSize:
+                                            const Size(double.infinity, 50),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              15), // กำหนดมุมโค้งมน
+                                          borderRadius:
+                                              BorderRadius.circular(15),
                                         ),
                                       ),
                                       child: const Text(
@@ -637,41 +593,6 @@ class _HomeValidateState extends State<HomeValidate> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [mainColor, darkerColor],
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildNavButton(Icons.home, 0),
-              _buildNavButton(Icons.search, 1),
-              _buildNavButton(Icons.shopping_cart, 2),
-              _buildNavButton(Icons.book, 3),
-              _buildNavButton(Icons.check, 4),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // สร้างฟังก์ชันนี้นอกจาก build method
-  Widget _buildNavButton(IconData icon, int index) {
-    return IconButton(
-      icon: Icon(icon),
-      color: _selectedIndex == index ? Colors.white : Colors.white70,
-      onPressed: () {
-        setState(() {
-          _selectedIndex = index;
-        });
-      },
     );
   }
 
