@@ -47,7 +47,6 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: '/cart',
           builder: (BuildContext context, GoRouterState state) {
-            // TODO: Implement CartPage
             return const Scaffold(body: Center(child: Text('Cart Page')));
           },
         ),
@@ -60,7 +59,6 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: '/history',
           builder: (BuildContext context, GoRouterState state) {
-            // TODO: Implement HistoryPage
             return const Scaffold(body: Center(child: Text('History Page')));
           },
         ),
@@ -87,26 +85,11 @@ class ScaffoldWithNavBar extends StatelessWidget {
             colors: [mainColor, darkerColor],
           ),
         ),
-        child: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.check), label: 'Validate'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart), label: 'Cart'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.account_balance_wallet), label: 'Wallet'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.history), label: 'History'),
-          ],
-          currentIndex: _calculateSelectedIndex(context),
-          onTap: (int idx) => _onItemTapped(idx, context),
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors
-              .transparent, // เปลี่ยนเป็น transparent เพื่อให้เห็น gradient
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white70,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
+        child: SafeArea(
+          child: CustomBottomNavigationBar(
+            currentIndex: _calculateSelectedIndex(context),
+            onTap: (int idx) => _onItemTapped(idx, context),
+          ),
         ),
       ),
     );
@@ -140,6 +123,66 @@ class ScaffoldWithNavBar extends StatelessWidget {
         GoRouter.of(context).go('/history');
         break;
     }
+  }
+}
+
+class CustomBottomNavigationBar extends StatelessWidget {
+  final int currentIndex;
+  final Function(int) onTap;
+
+  const CustomBottomNavigationBar({
+    Key? key,
+    required this.currentIndex,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 52,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildNavItem(Icons.home, 'Home', 0),
+          _buildNavItem(Icons.check, 'Validate', 1),
+          _buildNavItem(Icons.shopping_cart, 'Cart', 2),
+          _buildNavItem(Icons.account_balance_wallet, 'Wallet', 3),
+          _buildNavItem(Icons.history, 'History', 4),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNavItem(IconData icon, String label, int index) {
+    final isSelected = currentIndex == index;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => onTap(index),
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          height: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                color: Colors.white,
+                size: isSelected ? 26 : 22,
+              ),
+              if (isSelected)
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
