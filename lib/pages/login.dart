@@ -1,30 +1,38 @@
-import 'package:bidlotto/pages/home_user.dart';
-import 'package:bidlotto/pages/register.dart';
+// ignore_for_file: use_build_context_synchronously, unused_element
+import 'package:bidlotto/services/auth.dart';
+import 'package:bidlotto/utils/getErrorMessage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final Color mainColor = const Color(0xFFE32321);
   final Color darkerColor = const Color(0xFF7D1312);
 
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _handleLogin() {
-    if (_phoneController.text == '1' && _passwordController.text == '1') {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomeUserPage()),
-      );
+  void _handleLogin() async {
+    final phone = _phoneController.text;
+    final password = _passwordController.text;
+    if (phone.isNotEmpty && password.isNotEmpty) {
+      final response =
+          await ref.read(authServiceProvider.notifier).login(phone, password);
+      if (response['statusCode'] != 200) {
+        showErrorMessage(getErrorMessage(response), context);
+      }
+      if (response['statusCode'] == 200) {
+        context.go('/home');
+      }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid credentials. Please try again.')),
-      );
+      showErrorMessage('Please fill in all required fields.', context);
     }
   }
 
@@ -41,7 +49,8 @@ class _LoginPageState extends State<LoginPage> {
         ),
         child: SafeArea(
           child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints viewportConstraints) {
+            builder:
+                (BuildContext context, BoxConstraints viewportConstraints) {
               return SingleChildScrollView(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
@@ -57,7 +66,8 @@ class _LoginPageState extends State<LoginPage> {
                           const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.motorcycle, color: Colors.white, size: 24),
+                              Icon(Icons.motorcycle,
+                                  color: Colors.white, size: 24),
                               SizedBox(width: 8),
                               Text(
                                 'Bidlotto',
@@ -80,13 +90,15 @@ class _LoginPageState extends State<LoginPage> {
                                 padding: const EdgeInsets.all(16),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   children: [
                                     const Center(
                                       child: Text(
                                         'เข้าสู่ระบบ',
                                         style: TextStyle(
-                                            fontSize: 18, fontWeight: FontWeight.bold),
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                     const SizedBox(height: 40),
@@ -110,7 +122,8 @@ class _LoginPageState extends State<LoginPage> {
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: mainColor,
-                                        padding: const EdgeInsets.symmetric(vertical: 16),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 16),
                                       ),
                                       onPressed: _handleLogin,
                                       child: const Text(
@@ -124,10 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                                     const SizedBox(height: 16),
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) => const RegisterPage()),
-                                        );
+                                        context.push('/register');
                                       },
                                       child: const Text(
                                         'สมัครสมาชิก',
@@ -137,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    ),
+                                    )
                                   ],
                                 ),
                               ),

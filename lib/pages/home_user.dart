@@ -1,20 +1,22 @@
-import 'package:bidlotto/pages/home_validate.dart';
+import 'package:bidlotto/services/api/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class HomeUserPage extends StatefulWidget {
+class HomeUserPage extends ConsumerStatefulWidget {
   const HomeUserPage({super.key});
 
   @override
-  State<HomeUserPage> createState() => _HomeUserPageState();
+  ConsumerState<HomeUserPage> createState() => _HomeUserPageState();
 }
 
-class _HomeUserPageState extends State<HomeUserPage> {
-  int _selectedIndex = 0;
+class _HomeUserPageState extends ConsumerState<HomeUserPage> {
   final Color mainColor = const Color(0xFFE32321);
   final Color darkerColor = const Color(0xFF7D1312); // สีเข้มขึ้นเล็กน้อย
 
   @override
   Widget build(BuildContext context) {
+    final apiService = ref.read(userServiceProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mainColor,
@@ -78,6 +80,8 @@ class _HomeUserPageState extends State<HomeUserPage> {
               left: 8,
               right: 8,
               child: Card(
+                color: Colors.white,
+                elevation: 8,
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -87,15 +91,13 @@ class _HomeUserPageState extends State<HomeUserPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            'งวดวันที่ 16 สิงหาคม 2567',
+                            'งวดวันที่ \n16 สิงหาคม 2567',
                             style: TextStyle(fontSize: 16),
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => const HomeValidate()),
-                              );
+                            onPressed: () => {
+                              apiService.getAllUser(),
+                              context.push('/validate')
                             },
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
@@ -152,41 +154,6 @@ class _HomeUserPageState extends State<HomeUserPage> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [mainColor, darkerColor],
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildNavButton(Icons.home, 0),
-              _buildNavButton(Icons.search, 1),
-              _buildNavButton(Icons.shopping_cart, 2),
-              _buildNavButton(Icons.book, 3),
-              _buildNavButton(Icons.check, 4),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // สร้างฟังก์ชันนี้นอกจาก build method
-  Widget _buildNavButton(IconData icon, int index) {
-    return IconButton(
-      icon: Icon(icon),
-      color: _selectedIndex == index ? Colors.white : Colors.white70,
-      onPressed: () {
-        setState(() {
-          _selectedIndex = index;
-        });
-      },
     );
   }
 }

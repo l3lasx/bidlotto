@@ -8,9 +8,11 @@ class WalletPage extends StatefulWidget {
 }
 
 class _WalletPageState extends State<WalletPage> {
-  int _selectedIndex = 0;
   final Color mainColor = const Color(0xFFE32321);
   final Color darkerColor = const Color(0xFF7D1312);
+
+  // เพิ่มตัวแปรเพื่อติดตามสถานะของปุ่มที่ถูกเลือก
+  bool showAllOrders = true;
 
   @override
   Widget build(BuildContext context) {
@@ -76,12 +78,19 @@ class _WalletPageState extends State<WalletPage> {
               left: 8,
               right: 8,
               child: Card(
+                color: Colors.white,
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text('กระเป๋าของฉัน', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const Text('กระเป๋าของฉัน',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(16),
@@ -95,8 +104,12 @@ class _WalletPageState extends State<WalletPage> {
                             const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('เครดิตที่เหลือ', style: TextStyle(fontSize: 16)),
-                                Text('1,000 บาท', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                Text('เครดิตที่เหลือ',
+                                    style: TextStyle(fontSize: 16)),
+                                Text('1,000 บาท',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
                               ],
                             ),
                             ElevatedButton(
@@ -110,39 +123,104 @@ class _WalletPageState extends State<WalletPage> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: mainColor,
-                                foregroundColor: Colors.white,
-                              ),
-                              child: const Text('ลอตเตอรี่ทั้งหมด'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 290,
+              left: 8,
+              right: 8,
+              child: Card(
+                color: Colors.white,
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
                             ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.grey[300],
-                                foregroundColor: Colors.black,
+                          ],
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  // อัปเดต onPressed เพื่อเปลี่ยนสถานะ showAllOrders
+                                  onPressed: () {
+                                    setState(() {
+                                      showAllOrders = true;
+                                    });
+                                  },
+                                  // ปรับสีปุ่มตามสถานะ showAllOrders
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: showAllOrders
+                                        ? mainColor
+                                        : Colors.grey[300],
+                                    foregroundColor: showAllOrders
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                  child: const Text('ออเดอร์ทั้งหมด', style: TextStyle(fontSize: 16)),
+                                ),
                               ),
-                              child: const Text('ลอตเตอรี่ทั้งหมด'),
-                            ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: ElevatedButton(
+                                  // อัปเดต onPressed เพื่อเปลี่ยนสถานะ showAllOrders
+                                  onPressed: () {
+                                    setState(() {
+                                      showAllOrders = false;
+                                    });
+                                  },
+                                  // ปรับสีปุ่มตามสถานะ showAllOrders
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: !showAllOrders
+                                        ? mainColor
+                                        : Colors.grey[300],
+                                    foregroundColor: !showAllOrders
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                  child: const Text('ลอตเตอรี่ทั้งหมด', style: TextStyle(fontSize: 16)),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      const Center(
-                        child: Text(
-                          'ไม่พบคำสั่งซื้อในขณะนี้',
-                          style: TextStyle(color: Colors.grey),
                         ),
                       ),
+                      const SizedBox(height: 16),
+                      // แสดงข้อความต่างกันตามสถานะของ showAllOrders
+                      if (showAllOrders)
+                        const Center(
+                          child: Text(
+                            'ไม่พบคำสั่งซื้อในขณะนี้',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        )
+                      else
+                        const Center(
+                          child: Text(
+                            'ไม่พบลอตเตอรี่ในขณะนี้',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -151,40 +229,6 @@ class _WalletPageState extends State<WalletPage> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [mainColor, darkerColor],
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildNavButton(Icons.home, 0),
-              _buildNavButton(Icons.search, 1),
-              _buildNavButton(Icons.shopping_cart, 2),
-              _buildNavButton(Icons.book, 3),
-              _buildNavButton(Icons.check, 4),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavButton(IconData icon, int index) {
-    return IconButton(
-      icon: Icon(icon),
-      color: _selectedIndex == index ? Colors.white : Colors.white70,
-      onPressed: () {
-        setState(() {
-          _selectedIndex = index;
-        });
-      },
     );
   }
 }
