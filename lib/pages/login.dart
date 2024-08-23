@@ -104,6 +104,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                     const SizedBox(height: 40),
                                     TextField(
                                       controller: _phoneController,
+                                      keyboardType: TextInputType.phone,
                                       decoration: const InputDecoration(
                                         labelText: 'เบอร์โทรศัพท์',
                                         border: OutlineInputBorder(),
