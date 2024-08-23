@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bidlotto/config/environment.dart';
+import 'package:bidlotto/model/response/lottos_get_res.dart';
 import 'package:bidlotto/providers/dioProvider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,17 +13,30 @@ class lottoService {
 
   lottoService(this.dio);
 
-  Future<void> getAllLotto() async {
+  Future<Map<String, dynamic>> getAllLotto() async {
     try {
       final path = config['endpoint'] + '/api/lotto/';
       final response = await dio.get(path);
-      print(response.data);
+      return {
+        "statusCode": response.statusCode,
+        "data": response.data["data"],
+      };
     } catch (e) {
-      print('Error: $e');
+      if (e is DioException) {
+        return {
+          "statusCode": e.response?.statusCode,
+          "data": e.response?.data,
+          "error": e.message,
+        };
+      }
+      return {
+        "statusCode": 500,
+        "error": "An unexpected error occurred",
+      };
     }
   }
 
-    Future<CustomerPrizeGetResponse> getAllPrizesReward() async {
+  Future<CustomerPrizeGetResponse> getAllPrizesReward() async {
     try {
       final path = config['endpoint'] + '/api/lotto/prizes/reward/getall';
       final response = await dio.get(path);

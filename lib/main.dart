@@ -1,3 +1,4 @@
+import 'package:bidlotto/pages/cart.dart';
 import 'package:bidlotto/pages/home_user.dart';
 import 'package:bidlotto/pages/home_validate.dart';
 import 'package:bidlotto/pages/login.dart';
@@ -47,7 +48,7 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: '/cart',
           builder: (BuildContext context, GoRouterState state) {
-            return const Scaffold(body: Center(child: Text('Cart Page')));
+            return const Cart();
           },
         ),
         GoRoute(
