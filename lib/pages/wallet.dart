@@ -1,18 +1,52 @@
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
-class WalletPage extends StatefulWidget {
+import 'package:bidlotto/model/userModel.dart';
+import 'package:bidlotto/services/auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../services/api/user.dart';
+
+class WalletPage extends ConsumerStatefulWidget {
   const WalletPage({super.key});
 
   @override
-  State<WalletPage> createState() => _WalletPageState();
+  ConsumerState<WalletPage> createState() => _WalletPageState();
 }
 
-class _WalletPageState extends State<WalletPage> {
+class _WalletPageState extends ConsumerState<WalletPage> {
   final Color mainColor = const Color(0xFFE32321);
   final Color darkerColor = const Color(0xFF7D1312);
 
   // เพิ่มตัวแปรเพื่อติดตามสถานะของปุ่มที่ถูกเลือก
   bool showAllOrders = true;
+  UserModel? userData;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
+
+  Future<void> _fetchUserData() async {
+    final authstate = ref.read(authServiceProvider);
+    final user = authstate.user;
+    if (user != null && user.id != null) {
+      final apiService = ref.read(userServiceProvider);
+      try {
+        final data = await apiService.getUserById(user.id!);
+        if (data != null && data['data'] != null) {
+          setState(() {
+            userData = UserModel.fromJson(data['data']);
+            log(userData.toString());
+          });
+        }
+      } catch (e) {
+        print('Error fetching user data: $e');
+        // อาจจะแสดง error message ให้ user ทราบด้วย
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,15 +135,19 @@ class _WalletPageState extends State<WalletPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Column(
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('เครดิตที่เหลือ',
                                     style: TextStyle(fontSize: 16)),
-                                Text('1,000 บาท',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold)),
+                                Text(
+                                  userData != null
+                                      ? '${userData!.wallet ?? 0} บาท'
+                                      : 'กำลังโหลด...',
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ],
                             ),
                             ElevatedButton(
@@ -177,7 +215,8 @@ class _WalletPageState extends State<WalletPage> {
                                         ? Colors.white
                                         : Colors.black,
                                   ),
-                                  child: const Text('ออเดอร์ทั้งหมด', style: TextStyle(fontSize: 16)),
+                                  child: const Text('ออเดอร์ทั้งหมด',
+                                      style: TextStyle(fontSize: 16)),
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -198,7 +237,8 @@ class _WalletPageState extends State<WalletPage> {
                                         ? Colors.white
                                         : Colors.black,
                                   ),
-                                  child: const Text('ลอตเตอรี่ทั้งหมด', style: TextStyle(fontSize: 16)),
+                                  child: const Text('ลอตเตอรี่ทั้งหมด',
+                                      style: TextStyle(fontSize: 16)),
                                 ),
                               ),
                             ],
