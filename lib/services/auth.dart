@@ -51,8 +51,8 @@ class AuthService extends StateNotifier<AuthState> {
     if (response['statusCode'] == 200) {
       final token = response['data']['token'];
       await _saveToken(token);
-      final user = UserModel.fromJson(response['data']);
-      debugPrint("Login response data: $response['data']");
+      final user = UserModel.fromJson(response['data']['data']);
+      debugPrint("Login response data: ${response['data']}");
       state = AuthState(user: user, token: token);
     }
     return response;
