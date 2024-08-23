@@ -1,22 +1,49 @@
 import 'package:bidlotto/services/api/user.dart';
+import 'package:bidlotto/services/api/lotto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-class HomeUserPage extends ConsumerStatefulWidget {
+import '../model/response/customer_prize_get_res.dart';
+
+final prizesProvider = FutureProvider<CustomerPrizeGetResponse>((ref) async {
+  await initializeDateFormatting('th_TH', null);
+  return ref.read(lottoServiceProvider).getAllPrizesReward();
+});
+
+class HomeUserPage extends ConsumerWidget {
   const HomeUserPage({super.key});
 
   @override
-  ConsumerState<HomeUserPage> createState() => _HomeUserPageState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    return _HomeUserPageContent();
+  }
 }
 
-class _HomeUserPageState extends ConsumerState<HomeUserPage> {
+class _HomeUserPageContent extends ConsumerWidget {
   final Color mainColor = const Color(0xFFE32321);
-  final Color darkerColor = const Color(0xFF7D1312); // สีเข้มขึ้นเล็กน้อย
+  final Color darkerColor = const Color(0xFF7D1312);
+
+  _HomeUserPageContent({Key? key}) : super(key: key);
+
+  String thaiMonth(int month) {
+    const thaiMonths = [
+      'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+      'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+    ];
+    return thaiMonths[month - 1];
+  }
+
+  String formatDate(String dateString) {
+    final date = DateTime.parse(dateString);
+    return '${date.day} ${thaiMonth(date.month)} ${date.year + 543}';
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final apiService = ref.read(userServiceProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mainColor,
@@ -71,12 +98,11 @@ class _HomeUserPageState extends ConsumerState<HomeUserPage> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                    height: 600), // เพิ่มพื้นที่ว่างสำหรับ Card ที่จะเกยขึ้นมา
+                const SizedBox(height: 600),
               ],
             ),
             Positioned(
-              top: 120, // ปรับตำแหน่งตามต้องการ
+              top: 120,
               left: 8,
               right: 8,
               child: Card(
@@ -84,69 +110,75 @@ class _HomeUserPageState extends ConsumerState<HomeUserPage> {
                 elevation: 8,
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: ref.watch(prizesProvider).when(
+                    data: (prizeResponse) {
+                      final prizes = prizeResponse.prizes;
+                      if (prizes.isEmpty) {
+                        return const Text('No data available');
+                      }
+                      final date = prizes[0].date;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'งวดวันที่ \n16 สิงหาคม 2567',
-                            style: TextStyle(fontSize: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'งวดวันที่ \n${formatDate(date)}',
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  apiService.getAllUser();
+                                  context.push('/validate');
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.black,
+                                ),
+                                child: const Text(
+                                  'ตรวจสอบรางวัล',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ],
                           ),
-                          ElevatedButton(
-                            onPressed: () => {
-                              apiService.getAllUser(),
-                              context.push('/validate')
-                            },
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Colors.black,
+                          const SizedBox(height: 16),
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [mainColor, darkerColor],
+                              ),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            child: const Text(
-                              'ตรวจสอบรางวัล',
-                              style: TextStyle(fontSize: 16),
+                            child: Column(
+                              children: [
+                                for (var prize in prizes)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('รางวัลที่ ${prize.seq}',
+                                            style: const TextStyle(color: Colors.white, fontSize: 16)),
+                                        Text(prize.number,
+                                            style: const TextStyle(color: Colors.white, fontSize: 16)),
+                                        Text('${prize.rewardPoint} บาท',
+                                            style: const TextStyle(color: Colors.white, fontSize: 16)),
+                                      ],
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
                         ],
-                      ),
-                      const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [mainColor, darkerColor],
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Column(
-                          children: [
-                            for (int i = 1; i <= 5; i++)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('รางวัลที่ $i',
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 16)),
-                                    const Text('546564',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 16)),
-                                    Text('${7 - i} ล้านบาท',
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 16)),
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      );
+                    },
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (error, stack) => Text('Error: $error'),
                   ),
                 ),
               ),
