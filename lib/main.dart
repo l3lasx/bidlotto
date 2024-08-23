@@ -28,6 +28,12 @@ final GoRouter _router = GoRouter(
         return const RegisterPage();
       },
     ),
+    GoRoute(
+          path: '/profile',
+          builder: (BuildContext context, GoRouterState state) {
+            return const ProfilePage();
+          },
+        ),
     ShellRoute(
       builder: (BuildContext context, GoRouterState state, Widget child) {
         return ScaffoldWithNavBar(child: child);
@@ -61,12 +67,6 @@ final GoRouter _router = GoRouter(
           path: '/history',
           builder: (BuildContext context, GoRouterState state) {
             return const Scaffold(body: Center(child: Text('History Page')));
-          },
-        ),
-        GoRoute(
-          path: '/profile',
-          builder: (BuildContext context, GoRouterState state) {
-            return const ProfilePage();
           },
         ),
       ],
