@@ -17,6 +17,22 @@ class userService {
       print('Error: $e');
     }
   }
+
+  Future<Map<String, dynamic>?> getUserById(int id) async {
+    try {
+      final path = config['endpoint'] + '/api/users/$id';
+      final response = await dio.get(path);
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        print('Error: User not found');
+        return null;
+      }
+    } catch (e) {
+      print('Error: $e');
+      return null;
+    }
+  }
 }
 
 final userServiceProvider = Provider((ref) {
