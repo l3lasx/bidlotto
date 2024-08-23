@@ -151,6 +151,20 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                                     ),
                                   ),
                                 ),
+                                const SizedBox(height: 16),
+                                TextButton(
+                                      onPressed: () {
+                                        context.push('/login');
+                                      },
+                                      child: const Text(
+                                        'เข้าสู่ระบบ',
+                                        style: TextStyle(
+                                          color: Color(0xFFE32321),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    )
                               ],
                             ),
                           ),
