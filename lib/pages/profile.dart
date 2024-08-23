@@ -1,10 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../model/request/customer_update_put_req.dart';
+import '../model/response/customer_update_put_res.dart';
 import '../model/userModel.dart';
 import '../services/api/user.dart';
 import '../services/auth.dart';
+import 'package:flutter/services.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
@@ -26,6 +31,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       TextEditingController();
 
   UserModel? userData;
+  CustomerUpdatePutResponse? responseUpdate;
 
   @override
   void initState() {
@@ -64,6 +70,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   void _showConfirmationDialog() {
+    if (_phoneController.text.length != 10) {
+      _showErrorDialog('กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก');
+      return;
+    }
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -80,7 +90,59 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               child: Text('ตกลง', style: TextStyle(color: Colors.red)),
               onPressed: () {
                 Navigator.of(context).pop();
-                _showSuccessDialog();
+                _updateUserData();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _updateUserData() async {
+    final authstate = ref.read(authServiceProvider);
+    final user = authstate.user;
+    if (user != null && user.id != null) {
+      if (_phoneController.text.length != 10) {
+        _showErrorDialog('กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก');
+        return;
+      }
+
+      final apiService = ref.read(userServiceProvider);
+      try {
+        final updateData = CustomerUpdatePutResquest(
+          firstName: _firstNameController.text,
+          lastName: _lastNameController.text,
+          phone: _phoneController.text,
+        );
+
+        final response = await apiService.updateUser(user.id!, updateData);
+        responseUpdate = CustomerUpdatePutResponse.fromJson(response!);
+        if (responseUpdate != null) {
+          _showSuccessDialog();
+          await _fetchUserData();
+        } else {
+          _showErrorDialog('Failed to update user data');
+        }
+      } catch (e) {
+        print('Error updating user data: $e');
+        _showErrorDialog('An error occurred while updating user data');
+      }
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK', style: TextStyle(color: Colors.black)),
+              onPressed: () {
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -239,33 +301,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           border: OutlineInputBorder(),
                         ),
                         keyboardType: TextInputType.phone,
-                      ),
-                      const SizedBox(height: 16),
-                      TextField(
-                        controller: _oldPasswordController,
-                        decoration: const InputDecoration(
-                          labelText: 'รหัสผ่านเดิม',
-                          border: OutlineInputBorder(),
-                        ),
-                        obscureText: true,
-                      ),
-                      const SizedBox(height: 16),
-                      TextField(
-                        controller: _newPasswordController,
-                        decoration: const InputDecoration(
-                          labelText: 'รหัสผ่านใหม่',
-                          border: OutlineInputBorder(),
-                        ),
-                        obscureText: true,
-                      ),
-                      const SizedBox(height: 16),
-                      TextField(
-                        controller: _confirmPasswordController,
-                        decoration: const InputDecoration(
-                          labelText: 'ยืนยันรหัสผ่าน',
-                          border: OutlineInputBorder(),
-                        ),
-                        obscureText: true,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(10),
+                        ],
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton(
@@ -285,7 +324,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               ),
             ),
             Positioned(
-              bottom: 16,
+              bottom: 50,
               left: 8,
               right: 8,
               child: Padding(
