@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../model/userModel.dart';
 import '../services/api/user.dart';
@@ -21,7 +22,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   UserModel? userData;
 
@@ -79,6 +81,40 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               onPressed: () {
                 Navigator.of(context).pop();
                 _showSuccessDialog();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _logout() {
+    final authstate = ref.read(authServiceProvider.notifier);
+    authstate.logout();
+    // หลังจาก logout สำเร็จ ให้นำทางไปยังหน้า login
+    context.push('/login');
+  }
+
+  void _showLogoutConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('ยืนยันการออกจากระบบ'),
+          content: Text('คุณต้องการออกจากระบบใช่หรือไม่?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('ยกเลิก', style: TextStyle(color: Colors.black)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('ยืนยัน', style: TextStyle(color: Colors.red)),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _logout();
               },
             ),
           ],
@@ -255,9 +291,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
-                  onPressed: () {
-                    // ออกจากระบบ
-                  },
+                  onPressed: _showLogoutConfirmationDialog,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: mainColor,
                     minimumSize: const Size(double.infinity, 50),
