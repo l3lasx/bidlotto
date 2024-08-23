@@ -1,6 +1,7 @@
 import 'package:bidlotto/pages/home_user.dart';
 import 'package:bidlotto/pages/home_validate.dart';
 import 'package:bidlotto/pages/login.dart';
+import 'package:bidlotto/pages/profile.dart';
 import 'package:bidlotto/pages/register.dart';
 import 'package:bidlotto/pages/wallet.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,12 @@ final GoRouter _router = GoRouter(
         return const RegisterPage();
       },
     ),
+    GoRoute(
+          path: '/profile',
+          builder: (BuildContext context, GoRouterState state) {
+            return const ProfilePage();
+          },
+        ),
     ShellRoute(
       builder: (BuildContext context, GoRouterState state, Widget child) {
         return ScaffoldWithNavBar(child: child);

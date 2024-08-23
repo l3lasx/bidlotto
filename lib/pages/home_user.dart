@@ -29,8 +29,18 @@ class _HomeUserPageContent extends ConsumerWidget {
 
   String thaiMonth(int month) {
     const thaiMonths = [
-      'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
-      'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+      'มกราคม',
+      'กุมภาพันธ์',
+      'มีนาคม',
+      'เมษายน',
+      'พฤษภาคม',
+      'มิถุนายน',
+      'กรกฎาคม',
+      'สิงหาคม',
+      'กันยายน',
+      'ตุลาคม',
+      'พฤศจิกายน',
+      'ธันวาคม'
     ];
     return thaiMonths[month - 1];
   }
@@ -47,7 +57,7 @@ class _HomeUserPageContent extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mainColor,
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
@@ -57,7 +67,12 @@ class _HomeUserPageContent extends ConsumerWidget {
                 Text('Bidlotto', style: TextStyle(color: Colors.white)),
               ],
             ),
-            Icon(Icons.person, color: Colors.white),
+            IconButton(
+              icon: Icon(Icons.person, color: Colors.white),
+              onPressed: () {
+                context.push('/profile');
+              },
+            ),
           ],
         ),
       ),
@@ -111,75 +126,85 @@ class _HomeUserPageContent extends ConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: ref.watch(prizesProvider).when(
-                    data: (prizeResponse) {
-                      final prizes = prizeResponse.prizes;
-                      if (prizes.isEmpty) {
-                        return const Text('No data available');
-                      }
-                      final date = prizes[0].date;
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        data: (prizeResponse) {
+                          final prizes = prizeResponse.prizes;
+                          if (prizes.isEmpty) {
+                            return const Text('No data available');
+                          }
+                          final date = prizes[0].date;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'งวดวันที่ \n${formatDate(date)}',
-                                style: const TextStyle(fontSize: 16),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'งวดวันที่ \n${formatDate(date)}',
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      apiService.getAllUser();
+                                      context.push('/validate');
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: Colors.black,
+                                    ),
+                                    child: const Text(
+                                      'ตรวจสอบรางวัล',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  apiService.getAllUser();
-                                  context.push('/validate');
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                  backgroundColor: Colors.black,
+                              const SizedBox(height: 16),
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [mainColor, darkerColor],
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: const Text(
-                                  'ตรวจสอบรางวัล',
-                                  style: TextStyle(fontSize: 16),
+                                child: Column(
+                                  children: [
+                                    for (var prize in prizes)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('รางวัลที่ ${prize.seq}',
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16)),
+                                            Text(prize.number,
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16)),
+                                            Text('${prize.rewardPoint} บาท',
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16)),
+                                          ],
+                                        ),
+                                      ),
+                                  ],
                                 ),
                               ),
                             ],
-                          ),
-                          const SizedBox(height: 16),
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [mainColor, darkerColor],
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              children: [
-                                for (var prize in prizes)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 8),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('รางวัลที่ ${prize.seq}',
-                                            style: const TextStyle(color: Colors.white, fontSize: 16)),
-                                        Text(prize.number,
-                                            style: const TextStyle(color: Colors.white, fontSize: 16)),
-                                        Text('${prize.rewardPoint} บาท',
-                                            style: const TextStyle(color: Colors.white, fontSize: 16)),
-                                      ],
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                    loading: () => const Center(child: CircularProgressIndicator()),
-                    error: (error, stack) => Text('Error: $error'),
-                  ),
+                          );
+                        },
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                        error: (error, stack) => Text('Error: $error'),
+                      ),
                 ),
               ),
             ),
