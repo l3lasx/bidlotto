@@ -7,7 +7,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import '../model/response/customer_prize_get_res.dart';
 
-final prizesProvider = FutureProvider<CustomerPrizeGetResponse>((ref) async {
+final prizesProvider = FutureProvider.autoDispose<CustomerPrizeGetResponse>((ref) async {
   await initializeDateFormatting('th_TH', null);
   return ref.read(lottoServiceProvider).getAllPrizesReward();
 });
@@ -43,6 +43,9 @@ class _HomeUserPageContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final apiService = ref.read(userServiceProvider);
+
+    // เพิ่มบรรทัดนี้เพื่อให้ prizesProvider ถูกเรียกใหม่ทุกครั้งที่เข้าสู่หน้านี้
+    ref.watch(prizesProvider);
 
     return Scaffold(
       appBar: AppBar(
