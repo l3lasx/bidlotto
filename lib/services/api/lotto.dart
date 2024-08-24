@@ -22,13 +22,24 @@ class lottoService {
     }
   }
 
-    Future<CustomerPrizeGetResponse> getAllPrizesReward() async {
+  Future<CustomerPrizeGetResponse> getAllPrizesReward() async {
     try {
       final path = config['endpoint'] + '/api/lotto/prizes/reward/getall';
       final response = await dio.get(path);
       return customerPrizeGetResponseFromJson(json.encode(response.data));
     } catch (e) {
       print('Error: $e');
+      rethrow;
+    }
+  }
+
+  Future<dynamic> getLottoByStatus(int status) async {
+    try {
+      final path = '${config['endpoint']}/api/lotto/status/$status';
+      final response = await dio.get(path);
+      return response.data;
+    } catch (e) {
+      print('Error fetching lotto by status: $e');
       rethrow;
     }
   }
