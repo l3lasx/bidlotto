@@ -11,6 +11,8 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'pages/reset_lotto_admin.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -93,7 +95,7 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: '/Reset',
           builder: (BuildContext context, GoRouterState state) {
-            return const Scaffold(body: Center(child: Text('Reset Page')));
+            return const ResetLottoAdmin();
           },
         ),
       ],
