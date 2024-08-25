@@ -1,4 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, unused_element
+import 'dart:developer';
+
 import 'package:bidlotto/services/auth.dart';
 import 'package:bidlotto/utils/getErrorMessage.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +31,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         showErrorMessage(getErrorMessage(response), context);
       }
       if (response['statusCode'] == 200) {
-        context.go('/home');
+        log(response['data']['data']['role'].toString());
+        if (response['data']['data']['role'].toString() == '1') {
+          context.go('/admin');
+        } else {
+          context.go('/home');
+        }
       }
     } else {
       showErrorMessage('Please fill in all required fields.', context);
