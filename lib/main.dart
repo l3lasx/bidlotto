@@ -1,3 +1,4 @@
+import 'package:bidlotto/pages/draw_prize_admin.dart';
 import 'package:bidlotto/pages/home_admin.dart';
 import 'package:bidlotto/pages/home_user.dart';
 import 'package:bidlotto/pages/home_validate.dart';
@@ -86,7 +87,7 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: '/Prize',
           builder: (BuildContext context, GoRouterState state) {
-            return const Scaffold(body: Center(child: Text('Prize Page')));
+            return const DrawPrizeAdmin();
           },
         ),
         GoRoute(
