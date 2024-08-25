@@ -70,6 +70,17 @@ class lottoService {
       rethrow;
     }
   }
+
+  Future<dynamic> getLottoByStatus(int status) async {
+    try {
+      final path = '${config['endpoint']}/api/lotto/status/$status';
+      final response = await dio.get(path);
+      return response.data;
+    } catch (e) {
+      print('Error fetching lotto by status: $e');
+      rethrow;
+    }
+  }
 }
 
 final lottoServiceProvider = Provider((ref) {

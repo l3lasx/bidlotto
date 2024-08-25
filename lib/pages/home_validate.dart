@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeValidate extends StatefulWidget {
   const HomeValidate({super.key});
@@ -22,17 +23,22 @@ class _HomeValidateState extends State<HomeValidate> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mainColor,
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
+            const Row(
               children: [
                 Icon(Icons.motorcycle, color: Colors.white),
                 SizedBox(width: 8),
                 Text('Bidlotto', style: TextStyle(color: Colors.white)),
               ],
             ),
-            Icon(Icons.person, color: Colors.white),
+            IconButton(
+              icon: const Icon(Icons.person, color: Colors.white),
+              onPressed: () {
+                context.push('/profile');
+              },
+            ),
           ],
         ),
       ),
