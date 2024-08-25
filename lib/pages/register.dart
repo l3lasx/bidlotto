@@ -47,7 +47,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         .read(authServiceProvider.notifier)
         .register(firstName, lastName, phone, password, passwordConfirmation);
     if (response['statusCode'] == 201) {
-      context.go('/home');
+      context.go('/login');
       showSuccessMessage('Registration successful!', context);
     } else {
       showErrorMessage(getErrorMessage(response), context);

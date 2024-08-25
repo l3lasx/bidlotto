@@ -32,7 +32,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       }
       if (response['statusCode'] == 200) {
         log(response['data']['data']['role'].toString());
-        if (response['data']['data']['role'].toString() == '1') {
+        if (response['data']['data']['role'].toString() == '2') {
           context.go('/admin');
         } else {
           context.go('/home');
