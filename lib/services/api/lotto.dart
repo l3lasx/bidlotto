@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:bidlotto/config/environment.dart';
-import 'package:bidlotto/model/response/lottos_get_res.dart';
 import 'package:bidlotto/providers/dioProvider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
