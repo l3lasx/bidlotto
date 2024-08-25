@@ -1,4 +1,5 @@
 import 'package:bidlotto/pages/cart.dart';
+import 'package:bidlotto/pages/cart_result.dart';
 import 'package:bidlotto/pages/home_user.dart';
 import 'package:bidlotto/pages/home_validate.dart';
 import 'package:bidlotto/pages/login.dart';
@@ -13,7 +14,7 @@ void main() {
   runApp(const MyApp());
 }
 
-final GoRouter _router = GoRouter(
+final GoRouter router = GoRouter(
   initialLocation: '/login',
   routes: <RouteBase>[
     GoRoute(
@@ -49,6 +50,12 @@ final GoRouter _router = GoRouter(
           path: '/cart',
           builder: (BuildContext context, GoRouterState state) {
             return const Cart();
+          },
+        ),
+        GoRoute(
+          path: '/cart_result',
+          builder: (BuildContext context, GoRouterState state) {
+            return const CartResult();
           },
         ),
         GoRoute(
@@ -194,12 +201,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           textTheme: GoogleFonts.promptTextTheme(),
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         ),
         title: 'Bidlotto',
-        routerConfig: _router,
+        routerConfig: router,
       ),
     );
   }
