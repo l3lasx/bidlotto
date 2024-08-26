@@ -144,6 +144,29 @@ class CartService extends StateNotifier<CartState> {
     }
   }
 
+  Future<Map<String, dynamic>> orderMe() async {
+    try {
+      final path = config['endpoint'] + '/api/cart/order/me';
+      final response = await dio.get(path);
+      return {
+        "statusCode": response.statusCode,
+        "data": response.data,
+      };
+    } catch (e) {
+      if (e is DioException) {
+        return {
+          "statusCode": e.response?.statusCode,
+          "data": e.response?.data,
+          "error": e.message,
+        };
+      }
+      return {
+        "statusCode": 500,
+        "error": "An unexpected error occurred",
+      };
+    }
+  }
+
   Future<void> clearCart() async {
     state = CartState();
     // await _saveCart();

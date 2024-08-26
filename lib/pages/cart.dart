@@ -214,6 +214,7 @@ class _CartState extends ConsumerState<Cart> {
                                       return LottoCard(
                                         lottoNumber:
                                             lotto['number'] ?? '000000',
+                                        lottoStatus: lotto['status'],
                                         onAdded: () {
                                           showAddToCartDialog(context, lotto);
                                         },

@@ -58,6 +58,13 @@ final GoRouter router = GoRouter(
           },
         ),
         GoRoute(
+          path: '/validate/:lid',
+          builder: (context, state) {
+            final lid = state.pathParameters['lid'] ?? '';
+            return HomeValidate(lid: lid);
+          },
+        ),
+        GoRoute(
           path: '/cart',
           builder: (BuildContext context, GoRouterState state) {
             return const Cart();
