@@ -82,12 +82,6 @@ final GoRouter router = GoRouter(
             return const WalletPage();
           },
         ),
-        GoRoute(
-          path: '/history',
-          builder: (BuildContext context, GoRouterState state) {
-            return const Scaffold(body: Center(child: Text('History Page')));
-          },
-        ),
       ],
     ),
     ShellRoute(
@@ -152,7 +146,6 @@ class ScaffoldWithNavBar extends StatelessWidget {
     if (location.startsWith('/validate')) return 1;
     if (location.startsWith('/cart')) return 2;
     if (location.startsWith('/wallet')) return 3;
-    if (location.startsWith('/history')) return 4;
     return 0;
   }
 
@@ -169,9 +162,6 @@ class ScaffoldWithNavBar extends StatelessWidget {
         break;
       case 3:
         GoRouter.of(context).go('/wallet');
-        break;
-      case 4:
-        GoRouter.of(context).go('/history');
         break;
     }
   }
@@ -250,7 +240,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
           _buildNavItem(Icons.check, 'Validate', 1),
           _buildNavItem(Icons.shopping_cart, 'Cart', 2),
           _buildNavItem(Icons.account_balance_wallet, 'Wallet', 3),
-          _buildNavItem(Icons.history, 'History', 4),
         ],
       ),
     );
