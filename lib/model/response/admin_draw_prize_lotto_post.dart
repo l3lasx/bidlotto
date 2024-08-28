@@ -1,23 +1,23 @@
 // To parse this JSON data, do
 //
-//     final adminDrawPrizeLottoPoseResponse = adminDrawPrizeLottoPoseResponseFromJson(jsonString);
+//     final adminDrawPrizeLottoPostResponse = adminDrawPrizeLottoPostResponseFromJson(jsonString);
 
 import 'dart:convert';
 
-AdminDrawPrizeLottoPoseResponse adminDrawPrizeLottoPoseResponseFromJson(String str) => AdminDrawPrizeLottoPoseResponse.fromJson(json.decode(str));
+AdminDrawPrizeLottoPostResponse adminDrawPrizeLottoPostResponseFromJson(String str) => AdminDrawPrizeLottoPostResponse.fromJson(json.decode(str));
 
-String adminDrawPrizeLottoPoseResponseToJson(AdminDrawPrizeLottoPoseResponse data) => json.encode(data.toJson());
+String adminDrawPrizeLottoPostResponseToJson(AdminDrawPrizeLottoPostResponse data) => json.encode(data.toJson());
 
-class AdminDrawPrizeLottoPoseResponse {
+class AdminDrawPrizeLottoPostResponse {
     String message;
     List<Prize> prizes;
 
-    AdminDrawPrizeLottoPoseResponse({
+    AdminDrawPrizeLottoPostResponse({
         required this.message,
         required this.prizes,
     });
 
-    factory AdminDrawPrizeLottoPoseResponse.fromJson(Map<String, dynamic> json) => AdminDrawPrizeLottoPoseResponse(
+    factory AdminDrawPrizeLottoPostResponse.fromJson(Map<String, dynamic> json) => AdminDrawPrizeLottoPostResponse(
         message: json["message"],
         prizes: List<Prize>.from(json["prizes"].map((x) => Prize.fromJson(x))),
     );

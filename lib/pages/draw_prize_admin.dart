@@ -1,32 +1,45 @@
+import 'package:bidlotto/model/request/admin_draw_prize_lotto_req.dart';
+import 'package:bidlotto/model/response/admin_draw_prize_lotto_post.dart';
+import 'package:bidlotto/services/api/admin.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:math';
-
-class DrawPrizeAdmin extends StatefulWidget {
-  const DrawPrizeAdmin({super.key});
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+class DrawPrizeAdmin extends ConsumerStatefulWidget {
+  const DrawPrizeAdmin({Key? key}) : super(key: key);
 
   @override
-  State<DrawPrizeAdmin> createState() => _DrawPrizeAdminState();
+  ConsumerState<DrawPrizeAdmin> createState() => _DrawPrizeAdminState();
 }
 
-class _DrawPrizeAdminState extends State<DrawPrizeAdmin> {
+class _DrawPrizeAdminState extends ConsumerState<DrawPrizeAdmin> {
   final Color mainColor = const Color(0xFFE32321);
   final Color darkerColor = const Color(0xFF7D1312);
   final Color goldColor = const Color(0xFFFFD700);
-  List<String> generatedNumbers = [];
+  List<Prize> generatedPrizes = [];
 
-  void generateNumbers() {
-    Set<int> numbers = {};
-    Random random = Random();
+  Future<void> drawRandomNumbers() async {
+    final adminService = ref.read(adminServiceProvider);
+    final request = AdminDrawPrizeLottoPostRequest(
+      count: 5,
+      rewardPoints: [100000, 80000, 60000, 40000, 20000],
+    );
 
-    while (numbers.length < 5) {
-      int number = random.nextInt(1000000); // 0 to 999999
-      numbers.add(number);
+    try {
+      final result = await adminService.drawRandomFromLottos(request);
+      if (result != null) {
+        setState(() {
+          generatedPrizes = result.prizes;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to draw random numbers')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
     }
-
-    setState(() {
-      generatedNumbers = numbers.map((n) => n.toString().padLeft(6, '0')).toList();
-    });
   }
 
   Future<void> showConfirmationDialog() async {
@@ -55,7 +68,7 @@ class _DrawPrizeAdminState extends State<DrawPrizeAdmin> {
               child: Text('ยืนยัน'),
               onPressed: () {
                 Navigator.of(context).pop();
-                generateNumbers();
+                drawRandomNumbers();
               },
             ),
           ],
@@ -156,7 +169,7 @@ class _DrawPrizeAdminState extends State<DrawPrizeAdmin> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    if (generatedNumbers.isNotEmpty)
+                    if (generatedPrizes.isNotEmpty)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -164,7 +177,7 @@ class _DrawPrizeAdminState extends State<DrawPrizeAdmin> {
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                           SizedBox(height: 16),
                           ...List.generate(
-                            generatedNumbers.length,
+                            generatedPrizes.length,
                             (index) => Padding(
                               padding: const EdgeInsets.only(bottom: 16.0),
                               child: Card(
@@ -196,7 +209,7 @@ class _DrawPrizeAdminState extends State<DrawPrizeAdmin> {
                                           ),
                                         ),
                                         Text(
-                                          generatedNumbers[index],
+                                          generatedPrizes[index].number,
                                           style: TextStyle(
                                             fontSize: 24,
                                             fontWeight: FontWeight.bold,
