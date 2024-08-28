@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class HomeValidate extends StatefulWidget {
-  const HomeValidate({super.key});
+  final String lid;
+  const HomeValidate({super.key, this.lid = ""});
 
   @override
   State<HomeValidate> createState() => _HomeValidateState();
@@ -95,6 +96,7 @@ class _HomeValidateState extends State<HomeValidate> {
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Text("${widget.lid}"),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Center(
@@ -615,14 +617,16 @@ class _HomeValidateState extends State<HomeValidate> {
 class LotteryNumberInput extends StatefulWidget {
   final Function(String) onChanged;
 
-  const LotteryNumberInput({Key? key, required this.onChanged}) : super(key: key);
+  const LotteryNumberInput({Key? key, required this.onChanged})
+      : super(key: key);
 
   @override
   _LotteryNumberInputState createState() => _LotteryNumberInputState();
 }
 
 class _LotteryNumberInputState extends State<LotteryNumberInput> {
-  List<TextEditingController> controllers = List.generate(6, (_) => TextEditingController());
+  List<TextEditingController> controllers =
+      List.generate(6, (_) => TextEditingController());
   List<FocusNode> focusNodes = List.generate(6, (_) => FocusNode());
 
   @override
