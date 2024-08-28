@@ -1,3 +1,6 @@
+import 'package:bidlotto/pages/cart.dart';
+import 'package:bidlotto/pages/cart_result.dart';
+import 'package:bidlotto/pages/draw_prize_admin.dart';
 import 'package:bidlotto/pages/home_admin.dart';
 import 'package:bidlotto/pages/home_user.dart';
 import 'package:bidlotto/pages/home_validate.dart';
@@ -10,11 +13,13 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'pages/reset_lotto_admin.dart';
+
 void main() {
   runApp(const MyApp());
 }
 
-final GoRouter _router = GoRouter(
+final GoRouter router = GoRouter(
   initialLocation: '/login',
   routes: <RouteBase>[
     GoRoute(
@@ -53,21 +58,28 @@ final GoRouter _router = GoRouter(
           },
         ),
         GoRoute(
+          path: '/validate/:lid',
+          builder: (context, state) {
+            final lid = state.pathParameters['lid'] ?? '';
+            return HomeValidate(lid: lid);
+          },
+        ),
+        GoRoute(
           path: '/cart',
           builder: (BuildContext context, GoRouterState state) {
-            return const Scaffold(body: Center(child: Text('Cart Page')));
+            return const Cart();
+          },
+        ),
+        GoRoute(
+          path: '/cart_result',
+          builder: (BuildContext context, GoRouterState state) {
+            return const CartResult();
           },
         ),
         GoRoute(
           path: '/wallet',
           builder: (BuildContext context, GoRouterState state) {
             return const WalletPage();
-          },
-        ),
-        GoRoute(
-          path: '/history',
-          builder: (BuildContext context, GoRouterState state) {
-            return const Scaffold(body: Center(child: Text('History Page')));
           },
         ),
       ],
@@ -86,13 +98,13 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: '/Prize',
           builder: (BuildContext context, GoRouterState state) {
-            return const Scaffold(body: Center(child: Text('Prize Page')));
+            return const DrawPrizeAdmin();
           },
         ),
         GoRoute(
           path: '/Reset',
           builder: (BuildContext context, GoRouterState state) {
-            return const Scaffold(body: Center(child: Text('Reset Page')));
+            return const ResetLottoAdmin();
           },
         ),
       ],
@@ -134,7 +146,6 @@ class ScaffoldWithNavBar extends StatelessWidget {
     if (location.startsWith('/validate')) return 1;
     if (location.startsWith('/cart')) return 2;
     if (location.startsWith('/wallet')) return 3;
-    if (location.startsWith('/history')) return 4;
     return 0;
   }
 
@@ -151,9 +162,6 @@ class ScaffoldWithNavBar extends StatelessWidget {
         break;
       case 3:
         GoRouter.of(context).go('/wallet');
-        break;
-      case 4:
-        GoRouter.of(context).go('/history');
         break;
     }
   }
@@ -232,7 +240,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
           _buildNavItem(Icons.check, 'Validate', 1),
           _buildNavItem(Icons.shopping_cart, 'Cart', 2),
           _buildNavItem(Icons.account_balance_wallet, 'Wallet', 3),
-          _buildNavItem(Icons.history, 'History', 4),
         ],
       ),
     );
@@ -337,12 +344,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           textTheme: GoogleFonts.promptTextTheme(),
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         ),
         title: 'Bidlotto',
-        routerConfig: _router,
+        routerConfig: router,
       ),
     );
   }
