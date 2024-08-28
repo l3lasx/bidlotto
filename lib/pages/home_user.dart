@@ -1,4 +1,3 @@
-import 'package:bidlotto/services/api/user.dart';
 import 'package:bidlotto/services/api/lotto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,10 +27,7 @@ class _HomeUserPageContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final apiService = ref.read(userServiceProvider);
-
     ref.watch(prizesProvider);
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mainColor,
@@ -106,9 +102,6 @@ class _HomeUserPageContent extends ConsumerWidget {
                   child: ref.watch(prizesProvider).when(
                         data: (prizeResponse) {
                           final prizes = prizeResponse.prizes;
-                          if (prizes.isEmpty) {
-                            return const Text('No data available');
-                          }
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -121,44 +114,55 @@ class _HomeUserPageContent extends ConsumerWidget {
                                 ],
                               ),
                               const SizedBox(height: 16),
-                              Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [mainColor, darkerColor],
+                              if (prizes.isEmpty)
+                                Center(
+                                  child: Text(
+                                    'ยังไม่มีการออกรางวัล',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                    ),
                                   ),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Column(
-                                  children: [
-                                    for (var prize in prizes)
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 8),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text('รางวัลที่ ${prize.seq}',
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16)),
-                                            Text(prize.number,
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16)),
-                                            Text('${prize.rewardPoint} บาท',
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16)),
-                                          ],
+                                )
+                              else
+                                Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [mainColor, darkerColor],
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      for (var prize in prizes)
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text('รางวัลที่ ${prize.seq}',
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16)),
+                                              Text(prize.number,
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16)),
+                                              Text('${prize.rewardPoint} บาท',
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16)),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
                             ],
                           );
                         },
