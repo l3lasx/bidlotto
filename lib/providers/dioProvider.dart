@@ -1,6 +1,12 @@
 import 'package:bidlotto/services/auth.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:bidlotto/main.dart';
+
+final goRouterProvider = Provider<GoRouter>((ref) {
+  return router;
+});
 
 class DioInterceptor extends Interceptor {
   final Ref ref;
@@ -17,6 +23,15 @@ class DioInterceptor extends Interceptor {
     }
 
     super.onRequest(options, handler);
+  }
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    if (err.response?.statusCode == 401) {
+      ref.read(authServiceProvider.notifier).logout();
+      ref.read(goRouterProvider).go('/login');
+    }
+    super.onError(err, handler);
   }
 }
 

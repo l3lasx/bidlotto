@@ -3,12 +3,11 @@ import 'package:bidlotto/services/api/lotto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 import '../model/response/customer_prize_get_res.dart';
 
-final prizesProvider = FutureProvider<CustomerPrizeGetResponse>((ref) async {
-  await initializeDateFormatting('th_TH', null);
+final prizesProvider =
+    FutureProvider.autoDispose<CustomerPrizeGetResponse>((ref) async {
   return ref.read(lottoServiceProvider).getAllPrizesReward();
 });
 
@@ -27,32 +26,11 @@ class _HomeUserPageContent extends ConsumerWidget {
 
   _HomeUserPageContent({Key? key}) : super(key: key);
 
-  String thaiMonth(int month) {
-    const thaiMonths = [
-      'มกราคม',
-      'กุมภาพันธ์',
-      'มีนาคม',
-      'เมษายน',
-      'พฤษภาคม',
-      'มิถุนายน',
-      'กรกฎาคม',
-      'สิงหาคม',
-      'กันยายน',
-      'ตุลาคม',
-      'พฤศจิกายน',
-      'ธันวาคม'
-    ];
-    return thaiMonths[month - 1];
-  }
-
-  String formatDate(String dateString) {
-    final date = DateTime.parse(dateString);
-    return '${date.day} ${thaiMonth(date.month)} ${date.year + 543}';
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final apiService = ref.read(userServiceProvider);
+
+    ref.watch(prizesProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -60,7 +38,7 @@ class _HomeUserPageContent extends ConsumerWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
+            const Row(
               children: [
                 Icon(Icons.motorcycle, color: Colors.white),
                 SizedBox(width: 8),
@@ -68,7 +46,7 @@ class _HomeUserPageContent extends ConsumerWidget {
               ],
             ),
             IconButton(
-              icon: Icon(Icons.person, color: Colors.white),
+              icon: const Icon(Icons.person, color: Colors.white),
               onPressed: () {
                 context.push('/profile');
               },
@@ -131,32 +109,15 @@ class _HomeUserPageContent extends ConsumerWidget {
                           if (prizes.isEmpty) {
                             return const Text('No data available');
                           }
-                          final date = prizes[0].date;
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    'งวดวันที่ \n${formatDate(date)}',
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      apiService.getAllUser();
-                                      context.push('/validate');
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.white,
-                                      backgroundColor: Colors.black,
-                                    ),
-                                    child: const Text(
-                                      'ตรวจสอบรางวัล',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                  ),
+                                  Text('ผลรางวัล',
+                                      style: const TextStyle(
+                                          color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold)),
                                 ],
                               ),
                               const SizedBox(height: 16),
