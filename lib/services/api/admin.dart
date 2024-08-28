@@ -1,7 +1,8 @@
-
 import 'dart:convert';
 
+import 'package:bidlotto/model/request/admin_draw_lotto_post_req.dart';
 import 'package:bidlotto/model/request/admin_draw_prize_lotto_req.dart';
+import 'package:bidlotto/model/response/admin_draw_lotto_post_res_.dart';
 import 'package:bidlotto/model/response/admin_draw_prize_lotto_post.dart';
 import 'package:bidlotto/providers/dioProvider.dart';
 import 'package:dio/dio.dart';
@@ -14,7 +15,7 @@ class adminService {
 
   adminService(this.dio);
 
-    Future<Map<String, dynamic>?> resetTables() async {
+  Future<Map<String, dynamic>?> resetTables() async {
     try {
       final path = config['endpoint'] + '/api/admin/reset';
       final response = await dio.post(path);
@@ -31,7 +32,7 @@ class adminService {
     }
   }
 
-    Future<AdminDrawPrizeLottoPostResponse?> drawRandomFromLottos(AdminDrawPrizeLottoPostRequest request) async {
+  Future<AdminDrawPrizeLottoPostResponse?> drawRandomFromLottos(AdminDrawPrizeLottoPostRequest request) async {
     try {
       final path = config['endpoint'] + '/api/admin/draw_random_from_lottos';
       final response = await dio.post(
@@ -47,6 +48,26 @@ class adminService {
       }
     } catch (e) {
       print('Error drawing random from lottos: $e');
+      return null;
+    }
+  }
+
+  Future<AdminDrawLottoPostResponse?> generateLotto(AdminDrawLottoPostRequest request) async {
+    try {
+      final path = config['endpoint'] + '/api/admin/generate_lotto';
+      final response = await dio.post(
+        path,
+        data: adminDrawLottoPostRequestToJson(request),
+      );
+      
+      if (response.statusCode == 200) {
+        return adminDrawLottoPostResponseFromJson(json.encode(response.data));
+      } else {
+        print('Error: Failed to generate lotto');
+        return null;
+      }
+    } catch (e) {
+      print('Error generating lotto: $e');
       return null;
     }
   }
