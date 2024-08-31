@@ -110,7 +110,9 @@ class _HomeUserPageContent extends ConsumerWidget {
                                 children: [
                                   Text('ผลรางวัล',
                                       style: const TextStyle(
-                                          color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold)),
+                                          color: Colors.black,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold)),
                                 ],
                               ),
                               const SizedBox(height: 16),
