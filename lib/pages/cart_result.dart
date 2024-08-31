@@ -90,11 +90,11 @@ class _CartResultState extends ConsumerState<CartResult> {
             message: res['data']['message'],
             onClose: () async {
               await cartService.loadCart();
+              GoRouter.of(context).go('/wallet');
             },
           );
         },
       );
-      GoRouter.of(context).go('/wallet');
     } catch (e) {
       if (!context.mounted) return;
       await showDialog(
