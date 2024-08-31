@@ -1,9 +1,11 @@
+import 'package:bidlotto/model/request/admin_draw_lotto_post_req.dart';
 import 'package:bidlotto/model/response/admin_lotto_get_res.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/api/lotto.dart';
+import '../services/api/admin.dart';
 
 class HomeAdmin extends ConsumerStatefulWidget {
   const HomeAdmin({super.key});
@@ -28,7 +30,7 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
   Future<void> fetchLottoData() async {
     try {
       final lottoService = ref.read(lottoServiceProvider);
-      final response = await lottoService.getLottoByStatus(showUnsold ? 0 : 1);
+      final response = await lottoService.getLottoByStatus(showUnsold ? 0 : 2);
       setState(() {
         lottoData = AdminLottoGetResponse.fromJson(response);
       });
@@ -36,6 +38,73 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
       print(lottoData?.toJson());
     } catch (e) {
       print('Error fetching data: $e');
+    }
+  }
+
+  Future<void> showConfirmationDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('ยืนยันการสร้างลอตเตอรี่'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('คุณต้องการสร้างลอตเตอรี่ 100 เลขใช่หรือไม่?'),
+                Text('ราคา: 80 บาท'),
+                Text('วันหมดอายุ: 30 วันนับจากวันนี้'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('ยกเลิก'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('ยืนยัน'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                generateLotto();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> generateLotto() async {
+    try {
+      final adminService = ref.read(adminServiceProvider);
+      final request = AdminDrawLottoPostRequest(
+        expiredDate: DateTime.now().add(Duration(days: 30)).toIso8601String(),
+        count: 100,
+        price: 80,
+      );
+      
+      final response = await adminService.generateLotto(request);
+      
+      if (response != null) {
+        print('Generated Lotto Numbers:');
+        print(response.numbers);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('สร้างลอตเตอรี่สำเร็จ ${response.numbers.length} เลข')),
+        );
+        fetchLottoData(); // Refresh the lotto data
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('ไม่สามารถสร้างลอตเตอรี่ได้')),
+        );
+      }
+    } catch (e) {
+      print('Error generating lotto: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('เกิดข้อผิดพลาดในการสร้างลอตเตอรี่')),
+      );
     }
   }
 
@@ -120,7 +189,7 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: showConfirmationDialog,  // เปลี่ยนจาก generateLotto เป็น showConfirmationDialog
                         style: ElevatedButton.styleFrom(
                           backgroundColor: mainColor,
                           foregroundColor: Colors.white,
