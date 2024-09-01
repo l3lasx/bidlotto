@@ -285,8 +285,10 @@ class _WalletPageState extends ConsumerState<WalletPage> {
                                     final lotto = allItems[index];
                                     return GestureDetector(
                                       onTap: () {
-                                        GoRouter.of(context)
-                                            .go('/validate/${lotto['number']}');
+                                        if (lotto['lottoStatus'] == 2) {
+                                          GoRouter.of(context).go(
+                                              '/validate/${lotto['number']}');
+                                        }
                                       },
                                       child: LottoCard(
                                         lottoNumber:

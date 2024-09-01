@@ -27,9 +27,7 @@ class DioInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    if (err.response?.statusCode == 401 ||
-        err.response?.statusCode == 400 ||
-        err.response?.statusCode == 500) {
+    if (err.response?.statusCode == 401) {
       ref.read(authServiceProvider.notifier).logout();
       ref.read(goRouterProvider).go('/login');
     }
