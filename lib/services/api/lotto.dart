@@ -60,14 +60,27 @@ class lottoService {
     }
   }
 
-  Future<CustomerPrizeGetResponse> getAllPrizesReward() async {
+  Future<Map<String, dynamic>> getAllPrizesReward() async {
     try {
       final path = config['endpoint'] + '/api/lotto/prizes/reward/getall';
+      debugPrint(path);
       final response = await dio.get(path);
-      return customerPrizeGetResponseFromJson(json.encode(response.data));
+      return {
+        "statusCode": response.statusCode,
+        "data": response.data["prizes"],
+      };
     } catch (e) {
-      print('Error: $e');
-      rethrow;
+      if (e is DioException) {
+        return {
+          "statusCode": e.response?.statusCode,
+          "data": e.response?.data,
+          "error": e.message,
+        };
+      }
+      return {
+        "statusCode": 500,
+        "error": "An unexpected error occurred",
+      };
     }
   }
 

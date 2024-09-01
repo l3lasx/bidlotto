@@ -15,6 +15,7 @@ class CartResult extends ConsumerStatefulWidget {
 }
 
 class _CartResultState extends ConsumerState<CartResult> {
+  
   Future<dynamic> getCartItems() async {
     final cartService = ref.read(cartServiceProvider.notifier);
     await Future<void>.delayed(const Duration(seconds: 1));

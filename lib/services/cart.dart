@@ -49,7 +49,6 @@ class CartService extends StateNotifier<CartState> {
     } catch (e) {
       if (e is DioException) {
         if (e.response?.statusCode == 404) {
-          state = state.copyWith(items: [], totalAmount: 0);
           debugPrint("Cart is empty");
         } else {
           debugPrint("Error loading cart: ${e.response}");
@@ -57,6 +56,7 @@ class CartService extends StateNotifier<CartState> {
       } else {
         debugPrint("Unexpected error loading cart: $e");
       }
+      state = state.copyWith(items: [], totalAmount: 0);
     }
   }
 
