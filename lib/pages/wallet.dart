@@ -175,7 +175,7 @@ class _WalletPageState extends ConsumerState<WalletPage> {
                               foregroundColor:
                                   !showAllOrders ? Colors.white : Colors.black,
                             ),
-                            child: const Text('ลอตเตอรี่ทั้งหมด',
+                            child: const Text('ทั้งหมด',
                                 style: TextStyle(fontSize: 16)),
                           ),
                         ),

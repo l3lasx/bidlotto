@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class MainScreenTemplate extends StatefulWidget {
   final Widget children;
@@ -16,18 +17,32 @@ class _MainScreenTemplateState extends State<MainScreenTemplate> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => {
+            if (context.canPop())
+              {context.pop()}
+            else
+              {GoRouter.of(context).go('/home')}
+          },
+        ),
         backgroundColor: mainColor,
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
+            const Row(
               children: [
                 Icon(Icons.motorcycle, color: Colors.white),
                 SizedBox(width: 8),
                 Text('Bidlotto', style: TextStyle(color: Colors.white)),
               ],
             ),
-            Icon(Icons.person, color: Colors.white),
+            IconButton(
+              icon: const Icon(Icons.person, color: Colors.white),
+              onPressed: () {
+                context.push('/profile');
+              },
+            ),
           ],
         ),
       ),
@@ -73,12 +88,17 @@ class _MainScreenTemplateState extends State<MainScreenTemplate> {
             ],
           ),
           Positioned(
-            top: 120,
-            left: 8,
-            right: 8,
-            bottom: 0,
-            child: SingleChildScrollView(child: widget.children),
-          )
+              top: 0,
+              left: 8,
+              right: 8,
+              bottom: 0,
+              child: SingleChildScrollView(
+                  child: Column(children: [
+                SizedBox(
+                  height: 120,
+                ),
+                widget.children
+              ])))
         ],
       ),
     );
