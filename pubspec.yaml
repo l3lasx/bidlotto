@@ -43,6 +43,7 @@ dependencies:
   go_router: ^14.2.3
   intl: ^0.19.0
   animated_pin_input_text_field: ^1.0.0
+  pin_input_text_field: ^4.5.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

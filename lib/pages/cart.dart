@@ -4,6 +4,7 @@ import 'package:animated_pin_input_text_field/animated_pin_input_text_field.dart
 import 'package:bidlotto/components/cards/lotto_card.dart';
 import 'package:bidlotto/components/dialog/confirm.dart';
 import 'package:bidlotto/components/dialog/result.dart';
+import 'package:bidlotto/components/inputs/pin_input.dart';
 import 'package:bidlotto/components/screens/main_screen_template.dart';
 import 'package:bidlotto/services/api/lotto.dart';
 import 'package:bidlotto/services/cart.dart';
@@ -166,7 +167,8 @@ class _CartState extends ConsumerState<Cart> {
                     child: FutureBuilder<dynamic>(
                       future: loadData,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Center(child: CircularProgressIndicator()),
@@ -175,7 +177,8 @@ class _CartState extends ConsumerState<Cart> {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Center(
-                                child: Text('เกิดข้อผิดพลาด: ${snapshot.error}')),
+                                child:
+                                    Text('เกิดข้อผิดพลาด: ${snapshot.error}')),
                           );
                         } else if (snapshot.hasData &&
                             snapshot.data['statusCode'] == 200) {
@@ -195,7 +198,8 @@ class _CartState extends ConsumerState<Cart> {
                                               style: TextStyle(
                                                   color: mainColor,
                                                   fontSize: 24,
-                                                  fontWeight: FontWeight.normal)),
+                                                  fontWeight:
+                                                      FontWeight.normal)),
                                         ],
                                       ),
                                     ),
@@ -221,7 +225,8 @@ class _CartState extends ConsumerState<Cart> {
                                                 lotto['number'] ?? '000000',
                                             lottoStatus: lotto['status'],
                                             onAdded: () {
-                                              showAddToCartDialog(context, lotto);
+                                              showAddToCartDialog(
+                                                  context, lotto);
                                             },
                                           );
                                         },
@@ -238,8 +243,8 @@ class _CartState extends ConsumerState<Cart> {
                           return Center(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child:
-                                  Text('Token หมดอายุกรุณา Login ใหม่ อีกครั้ง'),
+                              child: Text(
+                                  'Token หมดอายุกรุณา Login ใหม่ อีกครั้ง'),
                             ),
                           );
                         } else {
@@ -360,20 +365,26 @@ class BoxState extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 40),
-              PinInputTextField(
-                automaticFocus: false,
-                aspectRatio: 1,
-                pinLength: 6,
-                textStyle: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-                onChanged: (String value) {
-                  controller.text = value;
-                },
-                key: pinInputKey,
-              ),
+              GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    // Your tap handling code
+                  },
+                  child: StatefulPinInputTextField(
+                    key: pinInputKey,
+                    pinLength: 6,
+                    onChanged: (String pin) {
+                      print('PIN changed: $pin');
+                      controller.text = pin;
+                    },
+                    automaticFocus: false,
+                    aspectRatio: 1,
+                    textStyle: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  )),
               SizedBox(height: 20),
               Row(
                 children: [

@@ -15,7 +15,6 @@ class CartResult extends ConsumerStatefulWidget {
 }
 
 class _CartResultState extends ConsumerState<CartResult> {
-  
   Future<dynamic> getCartItems() async {
     final cartService = ref.read(cartServiceProvider.notifier);
     await Future<void>.delayed(const Duration(seconds: 1));
@@ -91,7 +90,9 @@ class _CartResultState extends ConsumerState<CartResult> {
             message: res['data']['message'],
             onClose: () async {
               await cartService.loadCart();
-              GoRouter.of(context).go('/wallet');
+              if (res['statusCode'] == 200 || res['statusCode'] == 201) {
+                GoRouter.of(context).go('/wallet');
+              }
             },
           );
         },
