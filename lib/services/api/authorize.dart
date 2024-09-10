@@ -38,12 +38,12 @@ class AuthorizeService {
   }
 
   Future<Map<String, dynamic>> register(String first_name, String last_name,
-      String phone, String password, String password_confirmation) async {
+      String email, String password, String password_confirmation) async {
     try {
       final path = config['endpoint'] + '/api/auth/register';
       debugPrint('Login path: $path');
       Map<String, dynamic> postData = {
-        "phone": phone,
+        "email": email,
         "password": password,
         "first_name": first_name,
         "last_name": last_name,

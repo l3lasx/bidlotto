@@ -17,7 +17,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   final Color darkerColor = const Color(0xFF7D1312);
 
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirm_passwordController =
       TextEditingController();
@@ -26,14 +25,12 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
 
   void _handleRegister() async {
     final email = _emailController.text.trim();
-    final phone = _phoneController.text.trim();
     final password = _passwordController.text;
     final passwordConfirmation = _confirm_passwordController.text;
     final firstName = _firstNameController.text.trim();
     final lastName = _lastNameController.text.trim();
 
     if (email.isEmpty ||
-        phone.isEmpty ||
         password.isEmpty ||
         firstName.isEmpty ||
         lastName.isEmpty) {
@@ -48,7 +45,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
 
     final response = await ref
         .read(authServiceProvider.notifier)
-        .register(firstName, lastName, phone, password, passwordConfirmation);
+        .register(firstName, lastName, email, password, passwordConfirmation);
     if (response['statusCode'] == 201) {
       context.go('/login');
       showSuccessMessage('Registration successful!', context);
@@ -124,9 +121,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                                 const SizedBox(height: 20),
                                 _buildTextField(
                                     'อีเมล', _emailController),
-                                const SizedBox(height: 20),
-                                _buildTextField(
-                                    'เบอร์โทรศัพท์', _phoneController),
                                 const SizedBox(height: 16),
                                 _buildTextField('ชื่อ', _firstNameController),
                                 const SizedBox(height: 16),
