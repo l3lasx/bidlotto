@@ -113,7 +113,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                       controller: _phoneController,
                                       keyboardType: TextInputType.phone,
                                       decoration: const InputDecoration(
-                                        labelText: 'เบอร์โทรศัพท์',
+                                        labelText: 'อีเมล',
                                         border: OutlineInputBorder(),
                                       ),
                                     ),
