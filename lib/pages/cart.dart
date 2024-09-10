@@ -8,6 +8,7 @@ import 'package:bidlotto/components/inputs/pin_input.dart';
 import 'package:bidlotto/components/screens/main_screen_template.dart';
 import 'package:bidlotto/services/api/lotto.dart';
 import 'package:bidlotto/services/cart.dart';
+import 'package:bidlotto/services/draw_prize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -35,6 +36,9 @@ class _CartState extends ConsumerState<Cart> {
   initState() {
     super.initState();
     loadData = _getLottos();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(drawPrizeProvider.notifier).checkPrizeStatus();
+    });
   }
 
   Future<dynamic> _getLottos() async {
@@ -127,6 +131,7 @@ class _CartState extends ConsumerState<Cart> {
   Widget build(BuildContext context) {
     final cartState = ref.watch(cartServiceProvider);
     // final cartService = ref.read(cartServiceProvider.notifier);
+    final drawPrizeState = ref.watch(drawPrizeProvider);
     return MainScreenTemplate(
       children: Column(
         children: [
@@ -136,8 +141,21 @@ class _CartState extends ConsumerState<Cart> {
               children: [
                 BoxState(
                     controller: _lottoController,
-                    onSeeItems: () {
-                      GoRouter.of(context).go('/cart_result');
+                    onSeeItems: () async {
+                      if (drawPrizeState.isPrizeDrawn) {
+                        await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return ResultDialog(
+                              isSuccess: false,
+                              message: 'ขณะนี้กำลังออกรางวัลไม่สามารถซื้อได้',
+                              onClose: () {},
+                            );
+                          },
+                        );
+                      } else {
+                        GoRouter.of(context).go('/cart_result');
+                      }
                     },
                     onRandom: () {
                       randomLotto();
@@ -186,6 +204,16 @@ class _CartState extends ConsumerState<Cart> {
                           final lottos = res['data']
                               .where((item) => item['status'] == 0)
                               .toList();
+
+                          if (drawPrizeState.isPrizeDrawn) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                  child: Text(
+                                      'ขณะนี้กำลังออกรางวัลไม่สามารถซื้อได้')),
+                            );
+                          }
+
                           return lottos.length > 0
                               ? Column(
                                   children: [

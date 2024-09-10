@@ -206,6 +206,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: context.canPop()
+            ? IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => {
+                  if (context.canPop())
+                    {context.pop()}
+                  else
+                    {GoRouter.of(context).go('/home')}
+                },
+              )
+            : null,
         backgroundColor: mainColor,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
