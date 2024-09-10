@@ -18,15 +18,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final Color mainColor = const Color(0xFFE32321);
   final Color darkerColor = const Color(0xFF7D1312);
 
-  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   void _handleLogin() async {
-    final phone = _phoneController.text;
+    final email = _emailController.text;
     final password = _passwordController.text;
-    if (phone.isNotEmpty && password.isNotEmpty) {
+    if (email.isNotEmpty && password.isNotEmpty) {
       final response =
-          await ref.read(authServiceProvider.notifier).login(phone, password);
+          await ref.read(authServiceProvider.notifier).login(email, password);
       if (response['statusCode'] != 200) {
         showErrorMessage(getErrorMessage(response), context);
       }
@@ -110,10 +110,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                     ),
                                     const SizedBox(height: 40),
                                     TextField(
-                                      controller: _phoneController,
-                                      keyboardType: TextInputType.phone,
+                                      controller: _emailController,
                                       decoration: const InputDecoration(
-                                        labelText: 'เบอร์โทรศัพท์',
+                                        labelText: 'อีเมล',
                                         border: OutlineInputBorder(),
                                       ),
                                     ),
@@ -176,7 +175,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   void dispose() {
-    _phoneController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }

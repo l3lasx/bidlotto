@@ -175,7 +175,7 @@ class _WalletPageState extends ConsumerState<WalletPage> {
                               foregroundColor:
                                   !showAllOrders ? Colors.white : Colors.black,
                             ),
-                            child: const Text('ลอตเตอรี่ทั้งหมด',
+                            child: const Text('ทั้งหมด',
                                 style: TextStyle(fontSize: 16)),
                           ),
                         ),
@@ -284,8 +284,11 @@ class _WalletPageState extends ConsumerState<WalletPage> {
                                   itemBuilder: (context, index) {
                                     final lotto = allItems[index];
                                     return GestureDetector(
-                                      onTap: (){
-                                        GoRouter.of(context).go('/validate/${lotto['number']}');
+                                      onTap: () {
+                                        if (lotto['lottoStatus'] == 2) {
+                                          GoRouter.of(context).go(
+                                              '/validate/${lotto['number']}');
+                                        }
                                       },
                                       child: LottoCard(
                                         lottoNumber:

@@ -4,6 +4,7 @@ import 'package:animated_pin_input_text_field/animated_pin_input_text_field.dart
 import 'package:bidlotto/components/cards/lotto_card.dart';
 import 'package:bidlotto/components/dialog/confirm.dart';
 import 'package:bidlotto/components/dialog/result.dart';
+import 'package:bidlotto/components/inputs/pin_input.dart';
 import 'package:bidlotto/components/screens/main_screen_template.dart';
 import 'package:bidlotto/services/api/lotto.dart';
 import 'package:bidlotto/services/cart.dart';
@@ -158,94 +159,106 @@ class _CartState extends ConsumerState<Cart> {
                     yellowColor: yellowColor,
                     itemCount: cartState.items.length),
                 SizedBox(height: 10),
-                FutureBuilder<dynamic>(
-                  future: loadData,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                            child: Text('เกิดข้อผิดพลาด: ${snapshot.error}')),
-                      );
-                    } else if (snapshot.hasData &&
-                        snapshot.data['statusCode'] == 200) {
-                      final res = snapshot.data!;
-                      final lottos = res['data']
-                          .where((item) => item['status'] == 0)
-                          .toList();
-                      return lottos.length > 0
-                          ? Column(
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 8),
-                                  child: Row(
-                                    children: [
-                                      Text("ทั้งหมด​ (${lottos.length}) ",
-                                          style: TextStyle(
-                                              color: mainColor,
-                                              fontSize: 24,
-                                              fontWeight: FontWeight.normal)),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 8),
-                                  child: GridView.builder(
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemCount: lottos.length,
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      childAspectRatio: 1.5,
-                                      crossAxisSpacing: 8,
-                                      mainAxisSpacing: 8,
+                Card(
+                  color: Colors.white,
+                  elevation: 8,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FutureBuilder<dynamic>(
+                      future: loadData,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                                child:
+                                    Text('เกิดข้อผิดพลาด: ${snapshot.error}')),
+                          );
+                        } else if (snapshot.hasData &&
+                            snapshot.data['statusCode'] == 200) {
+                          final res = snapshot.data!;
+                          final lottos = res['data']
+                              .where((item) => item['status'] == 0)
+                              .toList();
+                          return lottos.length > 0
+                              ? Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      child: Row(
+                                        children: [
+                                          Text("ทั้งหมด​ (${lottos.length}) ",
+                                              style: TextStyle(
+                                                  color: mainColor,
+                                                  fontSize: 24,
+                                                  fontWeight:
+                                                      FontWeight.normal)),
+                                        ],
+                                      ),
                                     ),
-                                    itemBuilder: (context, index) {
-                                      final lotto = lottos[index];
-                                      return LottoCard(
-                                        lottoNumber:
-                                            lotto['number'] ?? '000000',
-                                        lottoStatus: lotto['status'],
-                                        onAdded: () {
-                                          showAddToCartDialog(context, lotto);
+                                    SizedBox(height: 4),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      child: GridView.builder(
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount: lottos.length,
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          childAspectRatio: 1.5,
+                                          crossAxisSpacing: 8,
+                                          mainAxisSpacing: 8,
+                                        ),
+                                        itemBuilder: (context, index) {
+                                          final lotto = lottos[index];
+                                          return LottoCard(
+                                            lottoNumber:
+                                                lotto['number'] ?? '000000',
+                                            lottoStatus: lotto['status'],
+                                            onAdded: () {
+                                              showAddToCartDialog(
+                                                  context, lotto);
+                                            },
+                                          );
                                         },
-                                      );
-                                    },
-                                  ),
+                                      ),
+                                    )
+                                  ],
                                 )
-                              ],
-                            )
-                          : Padding(
+                              : Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(child: Text('ไม่มีข้อมูล')),
+                                );
+                        } else if (snapshot.hasData &&
+                            snapshot.data['statusCode'] == 401) {
+                          return Center(
+                            child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Center(child: Text('ไม่มีข้อมูล')),
-                            );
-                    } else if (snapshot.hasData &&
-                        snapshot.data['statusCode'] == 401) {
-                      return Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Token หมดอายุกรุณา Login ใหม่ อีกครั้ง'),
-                        ),
-                      );
-                    } else {
-                      return Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('เกิดปัญหาบางอย่าง...'),
-                        ),
-                      );
-                    }
-                  },
-                ),
+                              child: Text(
+                                  'Token หมดอายุกรุณา Login ใหม่ อีกครั้ง'),
+                            ),
+                          );
+                        } else {
+                          return Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text('เกิดปัญหาบางอย่าง...'),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                )
               ],
             ),
           ),
@@ -352,20 +365,26 @@ class BoxState extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 40),
-              PinInputTextField(
-                automaticFocus: false,
-                aspectRatio: 1,
-                pinLength: 6,
-                textStyle: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-                onChanged: (String value) {
-                  controller.text = value;
-                },
-                key: pinInputKey,
-              ),
+              GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    // Your tap handling code
+                  },
+                  child: StatefulPinInputTextField(
+                    key: pinInputKey,
+                    pinLength: 6,
+                    onChanged: (String pin) {
+                      print('PIN changed: $pin');
+                      controller.text = pin;
+                    },
+                    automaticFocus: false,
+                    aspectRatio: 1,
+                    textStyle: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  )),
               SizedBox(height: 20),
               Row(
                 children: [
