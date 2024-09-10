@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 class AuthorizeService {
   final Dio _dio = Dio();
 
-  Future<Map<String, dynamic>> login(String phone, String password) async {
+  Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final path = config['endpoint'] + '/api/auth/login';
       debugPrint('Login path: $path');
 
-      Map<String, dynamic> postData = {"phone": phone, "password": password};
+      Map<String, dynamic> postData = {"email": email, "password": password};
       var response = await _dio.post(
         path,
         data: jsonEncode(postData),
