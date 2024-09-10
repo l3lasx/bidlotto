@@ -5,6 +5,7 @@ import 'package:bidlotto/components/inputs/pin_input.dart';
 import 'package:bidlotto/components/screens/main_screen_template.dart';
 import 'package:bidlotto/services/api/lotto.dart';
 import 'package:bidlotto/services/cart.dart';
+import 'package:bidlotto/services/draw_prize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -36,11 +37,15 @@ class _HomeValidateState extends ConsumerState<HomeValidate> {
     if (widget.lid != "") {
       _checkController.text = widget.lid;
     }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(drawPrizeProvider.notifier).checkPrizeStatus();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final cartService = ref.read(cartServiceProvider.notifier);
+    final drawPrizeState = ref.watch(drawPrizeProvider);
     return MainScreenTemplate(
       children: Card(
         color: Colors.white,
@@ -92,8 +97,7 @@ class _HomeValidateState extends ConsumerState<HomeValidate> {
                                         : Colors.black,
                                     backgroundColor: isFirstButtonSelected
                                         ? mainColor
-                                        : const Color.fromARGB(
-                                            255, 224, 217, 217),
+                                        : Color(0xFFE0D9D9),
                                     minimumSize: const Size(165, 50),
                                   ),
                                   child: const Text(
@@ -177,7 +181,22 @@ class _HomeValidateState extends ConsumerState<HomeValidate> {
                             const SizedBox(height: 10),
                             if (!showResult)
                               FilledButton(
-                                onPressed: validate,
+                                onPressed: () async {
+                                  if (!drawPrizeState.isPrizeDrawn) {
+                                    await showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return ResultDialog(
+                                          isSuccess: false,
+                                          message: 'ขณะนี้ยังไม่มีการออกรางวัล',
+                                          onClose: () {},
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    validate();
+                                  }
+                                },
                                 style: FilledButton.styleFrom(
                                   foregroundColor: Colors.white,
                                   backgroundColor: mainColor,
@@ -209,7 +228,24 @@ class _HomeValidateState extends ConsumerState<HomeValidate> {
                                           ),
                                         ),
                                         FilledButton(
-                                          onPressed: validate,
+                                          onPressed: () async {
+                                            if (!drawPrizeState.isPrizeDrawn) {
+                                              await showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return ResultDialog(
+                                                    isSuccess: false,
+                                                    message:
+                                                        'ขณะนี้ยังไม่มีการออกรางวัล',
+                                                    onClose: () {},
+                                                  );
+                                                },
+                                              );
+                                            } else {
+                                              validate();
+                                            }
+                                          },
                                           style: FilledButton.styleFrom(
                                             foregroundColor: Colors.white,
                                             backgroundColor: mainColor,
@@ -244,7 +280,24 @@ class _HomeValidateState extends ConsumerState<HomeValidate> {
                                           ),
                                         ),
                                         FilledButton(
-                                          onPressed: validate,
+                                          onPressed: () async {
+                                            if (!drawPrizeState.isPrizeDrawn) {
+                                              await showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return ResultDialog(
+                                                    isSuccess: false,
+                                                    message:
+                                                        'ขณะนี้ยังไม่มีการออกรางวัล',
+                                                    onClose: () {},
+                                                  );
+                                                },
+                                              );
+                                            } else {
+                                              validate();
+                                            }
+                                          },
                                           style: FilledButton.styleFrom(
                                             foregroundColor: Colors.white,
                                             backgroundColor: mainColor,
@@ -281,7 +334,12 @@ class _HomeValidateState extends ConsumerState<HomeValidate> {
                                           ),
                                         )
                                       ],
-                                    )
+                                    ),
+                            if (!drawPrizeState.isPrizeDrawn)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text("ขณะนี้ยังไม่มีการออกรางวัล"),
+                              )
                           ],
                         )
                       else
