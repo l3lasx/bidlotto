@@ -11,23 +11,23 @@ String customerUpdatePutResquestToJson(CustomerUpdatePutResquest data) => json.e
 class CustomerUpdatePutResquest {
     String firstName;
     String lastName;
-    String phone;
+    String email;
 
     CustomerUpdatePutResquest({
         required this.firstName,
         required this.lastName,
-        required this.phone,
+        required this.email,
     });
 
     factory CustomerUpdatePutResquest.fromJson(Map<String, dynamic> json) => CustomerUpdatePutResquest(
         firstName: json["first_name"],
         lastName: json["last_name"],
-        phone: json["phone"],
+        email: json["email"],
     );
 
     Map<String, dynamic> toJson() => {
         "first_name": firstName,
         "last_name": lastName,
-        "phone": phone,
+        "email": email,
     };
 }

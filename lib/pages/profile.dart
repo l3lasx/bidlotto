@@ -22,7 +22,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -41,7 +41,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     if (userData != null) {
       _firstNameController.text = userData!.firstName ?? '';
       _lastNameController.text = userData!.lastName ?? '';
-      _phoneController.text = userData!.phone ?? '';
+      _emailController.text = userData!.email ?? '';
       _oldPasswordController.text = '';
       _newPasswordController.text = '';
       _confirmPasswordController.text = '';
@@ -68,10 +68,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   void _showConfirmationDialog() {
-    if (_phoneController.text.length != 10) {
-      _showErrorDialog('กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก');
-      return;
-    }
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -101,17 +97,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final authstate = ref.read(authServiceProvider);
     final user = authstate.user;
     if (user != null && user.id != null) {
-      if (_phoneController.text.length != 10) {
-        _showErrorDialog('กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก');
-        return;
-      }
-
       final apiService = ref.read(userServiceProvider);
       try {
         final updateData = CustomerUpdatePutResquest(
           firstName: _firstNameController.text,
           lastName: _lastNameController.text,
-          phone: _phoneController.text,
+          email: _emailController.text,
         );
 
         final response = await apiService.updateUser(user.id!, updateData);
@@ -303,16 +294,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       ),
                       const SizedBox(height: 16),
                       TextField(
-                        controller: _phoneController,
+                        controller: _emailController,
                         decoration: const InputDecoration(
-                          labelText: 'เบอร์โทรศัพท์',
+                          labelText: 'อีเมล',
                           border: OutlineInputBorder(),
                         ),
-                        keyboardType: TextInputType.phone,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(10),
-                        ],
+                        keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton(
@@ -360,7 +347,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
-    _phoneController.dispose();
+    _emailController.dispose();
     _oldPasswordController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();

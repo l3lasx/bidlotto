@@ -30,7 +30,7 @@ class CustomerUpdatePutResponse {
 
 class Data {
     int id;
-    String phone;
+    String email;
     String firstName;
     String lastName;
     String password;
@@ -39,7 +39,7 @@ class Data {
 
     Data({
         required this.id,
-        required this.phone,
+        required this.email,
         required this.firstName,
         required this.lastName,
         required this.password,
@@ -49,7 +49,7 @@ class Data {
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
         id: json["id"],
-        phone: json["phone"],
+        email: json["email"],
         firstName: json["first_name"],
         lastName: json["last_name"],
         password: json["password"],
@@ -59,7 +59,7 @@ class Data {
 
     Map<String, dynamic> toJson() => {
         "id": id,
-        "phone": phone,
+        "email": email,
         "first_name": firstName,
         "last_name": lastName,
         "password": password,
