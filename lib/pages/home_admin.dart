@@ -20,28 +20,53 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
   String selectedLottery = 'ลอตเตอรี่ 100';
   bool showUnsold = true;
   AdminLottoGetResponse? lottoData;
+  bool isGeneratingLotto = false;
+  bool hasUnsoldLotto = false;
+  bool hasSoldLotto = false;
 
   @override
   void initState() {
     super.initState();
-    fetchLottoData();
+    fetchAllLottoData();
   }
 
-  Future<void> fetchLottoData() async {
+  Future<void> fetchAllLottoData() async {
+    await fetchLottoData(true);  // Fetch unsold lotto
+    await fetchLottoData(false); // Fetch sold lotto
+  }
+
+  Future<void> fetchLottoData([bool? fetchUnsold]) async {
     try {
       final lottoService = ref.read(lottoServiceProvider);
-      final response = await lottoService.getLottoByStatus(showUnsold ? 0 : 2);
+      final response = await lottoService.getLottoByStatus(fetchUnsold ?? showUnsold ? 0 : 2);
+      final fetchedData = AdminLottoGetResponse.fromJson(response);
+      
       setState(() {
-        lottoData = AdminLottoGetResponse.fromJson(response);
+        if (fetchUnsold == null) {
+          lottoData = fetchedData;
+        }
+        if (fetchUnsold ?? showUnsold) {
+          hasUnsoldLotto = fetchedData.data.isNotEmpty;
+        } else {
+          hasSoldLotto = fetchedData.data.isNotEmpty;
+        }
       });
+      
       print('Fetched Lotto Data:');
-      print(lottoData?.toJson());
+      print(fetchedData.toJson());
     } catch (e) {
       print('Error fetching data: $e');
     }
   }
 
   Future<void> showConfirmationDialog() async {
+    if (hasUnsoldLotto || hasSoldLotto) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('มีลอตเตอรี่อยู่แล้ว ไม่สามารถสร้างใหม่ได้')),
+      );
+      return;
+    }
+
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -78,6 +103,12 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
   }
 
   Future<void> generateLotto() async {
+    if (isGeneratingLotto) return;
+
+    setState(() {
+      isGeneratingLotto = true;
+    });
+
     try {
       final adminService = ref.read(adminServiceProvider);
       final request = AdminDrawLottoPostRequest(
@@ -105,6 +136,10 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('เกิดข้อผิดพลาดในการสร้างลอตเตอรี่')),
       );
+    } finally {
+      setState(() {
+        isGeneratingLotto = false;
+      });
     }
   }
 
@@ -189,15 +224,16 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: showConfirmationDialog,  // เปลี่ยนจาก generateLotto เป็น showConfirmationDialog
+                        onPressed: (isGeneratingLotto || hasUnsoldLotto || hasSoldLotto) ? null : showConfirmationDialog,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: mainColor,
+                          backgroundColor: (isGeneratingLotto || hasUnsoldLotto || hasSoldLotto) ? Colors.grey : mainColor,
                           foregroundColor: Colors.white,
                           padding: EdgeInsets.symmetric(vertical: 10),
                         ),
-                        child: Text('Generate',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        child: Text(
+                          isGeneratingLotto ? 'กำลังสร้าง...' : 'Generate',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                        ),
                       ),
                     ),
                     SizedBox(height: 24),
@@ -227,10 +263,12 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
-                                  setState(() {
-                                    showUnsold = true;
-                                  });
-                                  fetchLottoData();
+                                  if (!showUnsold) {
+                                    setState(() {
+                                      showUnsold = true;
+                                    });
+                                    fetchLottoData();
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: showUnsold
@@ -252,10 +290,12 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
-                                  setState(() {
-                                    showUnsold = false;
-                                  });
-                                  fetchLottoData();
+                                  if (showUnsold) {
+                                    setState(() {
+                                      showUnsold = false;
+                                    });
+                                    fetchLottoData();
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: !showUnsold
