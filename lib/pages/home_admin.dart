@@ -347,31 +347,49 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                           itemCount: (showUnsold ? unsoldLottoData!.data : soldLottoData!.data).length,
                           itemBuilder: (context, index) {
                             final lotto = (showUnsold ? unsoldLottoData!.data : soldLottoData!.data)[index];
-                            return Card(
-                              elevation: 3,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
+                            return Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [darkerColor, mainColor],
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.3),
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(12),
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       lotto.number,
                                       style: TextStyle(
+                                        color: Colors.white,
                                         fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                        color: mainColor,
+                                        letterSpacing: 6,
                                       ),
                                     ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      '฿${lotto.price}',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          '฿${lotto.price}',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
