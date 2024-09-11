@@ -23,6 +23,9 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
 
+  bool _obscurePassword = true;
+  bool _showPasswordToggle = false;
+
   void _handleRegister() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
@@ -181,14 +184,34 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController _controller,
+  Widget _buildTextField(String label, TextEditingController controller,
       {bool isPassword = false}) {
     return TextField(
-      controller: _controller,
-      obscureText: isPassword,
+      controller: controller,
+      obscureText: isPassword ? _obscurePassword : false,
+      onChanged: (value) {
+        if (isPassword) {
+          setState(() {
+            _showPasswordToggle = _passwordController.text.isNotEmpty || 
+                                  _confirm_passwordController.text.isNotEmpty;
+          });
+        }
+      },
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
+        suffixIcon: isPassword && _showPasswordToggle
+            ? IconButton(
+                icon: Icon(
+                  _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscurePassword = !_obscurePassword;
+                  });
+                },
+              )
+            : null,
       ),
     );
   }

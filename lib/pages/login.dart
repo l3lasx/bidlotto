@@ -21,6 +21,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  bool _obscurePassword = true;
+  bool _showPasswordToggle = false;
+
   void _handleLogin() async {
     final email = _emailController.text;
     final password = _passwordController.text;
@@ -119,10 +122,30 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                     const SizedBox(height: 16),
                                     TextField(
                                       controller: _passwordController,
-                                      obscureText: true,
-                                      decoration: const InputDecoration(
+                                      obscureText: _obscurePassword,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _showPasswordToggle = value.isNotEmpty;
+                                        });
+                                      },
+                                      decoration: InputDecoration(
                                         labelText: 'รหัสผ่าน',
                                         border: OutlineInputBorder(),
+                                        suffixIcon: _showPasswordToggle
+                                            ? IconButton(
+                                                icon: Icon(
+                                                  _obscurePassword
+                                                      ? Icons.visibility
+                                                      : Icons.visibility_off,
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _obscurePassword =
+                                                        !_obscurePassword;
+                                                  });
+                                                },
+                                              )
+                                            : null,
                                       ),
                                     ),
                                     const SizedBox(height: 16),
