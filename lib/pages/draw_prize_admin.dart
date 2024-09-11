@@ -1,6 +1,7 @@
 import 'package:bidlotto/model/request/admin_draw_prize_lotto_req.dart';
 import 'package:bidlotto/model/response/admin_draw_prize_lotto_post.dart';
 import 'package:bidlotto/services/api/admin.dart';
+import 'package:bidlotto/services/api/lotto.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,7 +18,34 @@ class _DrawPrizeAdminState extends ConsumerState<DrawPrizeAdmin> {
   final Color darkerColor = const Color(0xFF7D1312);
   final Color goldColor = const Color(0xFFFFD700);
   List<Prize> generatedPrizes = [];
-  int type = 0;
+  List<dynamic> allPrizes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAllPrizes();
+  }
+
+  Future<void> fetchAllPrizes() async {
+    final lottoService = ref.read(lottoServiceProvider);
+    try {
+      final result = await lottoService.getAllPrizesReward();
+      if (result['statusCode'] == 200) {
+        setState(() {
+          allPrizes = (result['data'] as List).cast<Map<String, dynamic>>();
+          allPrizes.sort((a, b) => (a['seq'] as int? ?? 0).compareTo(b['seq'] as int? ?? 0));
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to fetch prizes')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
 
   Future<void> drawRandomNumbers(int type) async {
     final adminService = ref.read(adminServiceProvider);
@@ -48,7 +76,16 @@ class _DrawPrizeAdminState extends ConsumerState<DrawPrizeAdmin> {
     }
   }
 
+  bool get canGeneratePrizes => allPrizes.isEmpty && generatedPrizes.isEmpty;
+
   Future<void> showConfirmationDialog(int type) async {
+    if (!canGeneratePrizes) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('มีรางวัลอยู่แล้ว ไม่สามารถสุ่มใหม่ได้')),
+      );
+      return;
+    }
+
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -164,11 +201,9 @@ class _DrawPrizeAdminState extends ConsumerState<DrawPrizeAdmin> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
-                          showConfirmationDialog(0);
-                        },
+                        onPressed: canGeneratePrizes ? () => showConfirmationDialog(0) : null,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: mainColor,
+                          backgroundColor: canGeneratePrizes ? mainColor : Colors.grey,
                           foregroundColor: Colors.white,
                           padding: EdgeInsets.symmetric(vertical: 10),
                         ),
@@ -187,11 +222,9 @@ class _DrawPrizeAdminState extends ConsumerState<DrawPrizeAdmin> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
-                          showConfirmationDialog(1);
-                        },
+                        onPressed: canGeneratePrizes ? () => showConfirmationDialog(1) : null,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: mainColor,
+                          backgroundColor: canGeneratePrizes ? mainColor : Colors.grey,
                           foregroundColor: Colors.white,
                           padding: EdgeInsets.symmetric(vertical: 10),
                         ),
@@ -230,25 +263,43 @@ class _DrawPrizeAdminState extends ConsumerState<DrawPrizeAdmin> {
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(16.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                    child: Column(
                                       children: [
-                                        Text(
-                                          'รางวัลที่ ${index + 1}',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: mainColor,
-                                          ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'รางวัลที่ ${index + 1}',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: mainColor,
+                                              ),
+                                            ),
+                                            Text(
+                                              generatedPrizes[index].number,
+                                              style: TextStyle(
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black87,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        Text(
-                                          generatedPrizes[index].number,
-                                          style: TextStyle(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black87,
-                                          ),
+                                        SizedBox(height: 8),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              '${generatedPrizes[index].rewardPoint} บาท',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.green,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -257,6 +308,78 @@ class _DrawPrizeAdminState extends ConsumerState<DrawPrizeAdmin> {
                               ),
                             ),
                           ),
+                        ],
+                      ),
+                    if (allPrizes.isNotEmpty)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('รางวัลทั้งหมด:',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          SizedBox(height: 16),
+                          ...allPrizes.map((prize) => Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: Card(
+                              elevation: 8,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                side: BorderSide(color: goldColor, width: 2),
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [Colors.white, Color(0xFFFAFAFA)],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'รางวัลที่ ${prize['seq'] ?? ""}',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: mainColor,
+                                            ),
+                                          ),
+                                          Text(
+                                            prize['number'] ?? "",
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black87,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            '${prize['reward_point'] ?? ""} บาท',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.green,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )).toList(),
                         ],
                       ),
                   ],
