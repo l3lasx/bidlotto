@@ -4,6 +4,7 @@ import 'package:bidlotto/services/api/admin.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 class DrawPrizeAdmin extends ConsumerStatefulWidget {
   const DrawPrizeAdmin({Key? key}) : super(key: key);
 
@@ -16,8 +17,9 @@ class _DrawPrizeAdminState extends ConsumerState<DrawPrizeAdmin> {
   final Color darkerColor = const Color(0xFF7D1312);
   final Color goldColor = const Color(0xFFFFD700);
   List<Prize> generatedPrizes = [];
+  int type = 0;
 
-  Future<void> drawRandomNumbers() async {
+  Future<void> drawRandomNumbers(int type) async {
     final adminService = ref.read(adminServiceProvider);
     final request = AdminDrawPrizeLottoPostRequest(
       count: 5,
@@ -25,7 +27,11 @@ class _DrawPrizeAdminState extends ConsumerState<DrawPrizeAdmin> {
     );
 
     try {
-      final result = await adminService.drawRandomFromLottos(request);
+      final result;
+      (type == 0)
+          ? result = await adminService.drawRandomFromLottos(request)
+          : result = await adminService.drawRandomFromSoldLottos(request);
+
       if (result != null) {
         setState(() {
           generatedPrizes = result.prizes;
@@ -42,17 +48,17 @@ class _DrawPrizeAdminState extends ConsumerState<DrawPrizeAdmin> {
     }
   }
 
-  Future<void> showConfirmationDialog() async {
+  Future<void> showConfirmationDialog(int type) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('ยืนยันการสุ่มเลข'),
+          title: Text('ยืนยันการสุ่มเลขรางวัล'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('คุณต้องการสุ่มเลขใหม่หรือไม่?'),
+                Text('คุณต้องการสุ่มเลขรางวัลหรือไม่?'),
                 Text('การดำเนินการนี้จะไม่สามารถยกเลิกได้'),
               ],
             ),
@@ -68,7 +74,7 @@ class _DrawPrizeAdminState extends ConsumerState<DrawPrizeAdmin> {
               child: Text('ยืนยัน'),
               onPressed: () {
                 Navigator.of(context).pop();
-                drawRandomNumbers();
+                (type == 0) ? drawRandomNumbers(0) : drawRandomNumbers(1);
               },
             ),
           ],
@@ -150,14 +156,40 @@ class _DrawPrizeAdminState extends ConsumerState<DrawPrizeAdmin> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'สุ่มออกรางวัล 5 รางวัล',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      'สุ่มออกรางวัล 5 รางวัลจากลอตเตอรี่ทั้งหมด',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 16),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: showConfirmationDialog,
+                        onPressed: () {
+                          showConfirmationDialog(0);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: mainColor,
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                        ),
+                        child: Text('Generate',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'สุ่มออกรางวัล 5 รางวัลจากลอตเตอรี่ที่ขาย',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          showConfirmationDialog(1);
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: mainColor,
                           foregroundColor: Colors.white,
@@ -174,7 +206,8 @@ class _DrawPrizeAdminState extends ConsumerState<DrawPrizeAdmin> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('ผลการสุ่ม:',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
                           SizedBox(height: 16),
                           ...List.generate(
                             generatedPrizes.length,
@@ -198,7 +231,8 @@ class _DrawPrizeAdminState extends ConsumerState<DrawPrizeAdmin> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(16.0),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           'รางวัลที่ ${index + 1}',

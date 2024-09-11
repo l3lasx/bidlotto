@@ -51,6 +51,26 @@ class adminService {
       return null;
     }
   }
+  
+  Future<AdminDrawPrizeLottoPostResponse?> drawRandomFromSoldLottos(AdminDrawPrizeLottoPostRequest request) async {
+    try {
+      final path = config['endpoint'] + '/api/admin/draw_random_from_lottos_sell';
+      final response = await dio.post(
+        path,
+        data: adminDrawPrizeLottoPostRequestToJson(request),
+      );
+      
+      if (response.statusCode == 200) {
+        return adminDrawPrizeLottoPostResponseFromJson(json.encode(response.data));
+      } else {
+        print('Error: Failed to draw random from sold lottos');
+        return null;
+      }
+    } catch (e) {
+      print('Error drawing random from  lottos: $e');
+      return null;
+    }
+  }
 
   Future<AdminDrawLottoPostResponse?> generateLotto(AdminDrawLottoPostRequest request) async {
     try {
