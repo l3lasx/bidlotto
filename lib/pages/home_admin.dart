@@ -19,7 +19,8 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
   final Color darkerColor = const Color(0xFF7D1312);
   String selectedLottery = 'ลอตเตอรี่ 100';
   bool showUnsold = true;
-  AdminLottoGetResponse? lottoData;
+  AdminLottoGetResponse? unsoldLottoData;
+  AdminLottoGetResponse? soldLottoData;
   bool isGeneratingLotto = false;
   bool hasUnsoldLotto = false;
   bool hasSoldLotto = false;
@@ -42,12 +43,11 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
       final fetchedData = AdminLottoGetResponse.fromJson(response);
       
       setState(() {
-        if (fetchUnsold == null) {
-          lottoData = fetchedData;
-        }
         if (fetchUnsold ?? showUnsold) {
+          unsoldLottoData = fetchedData;
           hasUnsoldLotto = fetchedData.data.isNotEmpty;
         } else {
+          soldLottoData = fetchedData;
           hasSoldLotto = fetchedData.data.isNotEmpty;
         }
       });
@@ -78,7 +78,6 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
               children: <Widget>[
                 Text('คุณต้องการสร้างลอตเตอรี่ 100 เลขใช่หรือไม่?'),
                 Text('ราคา: 80 บาท'),
-                Text('วันหมดอายุ: 30 วันนับจากวันนี้'),
               ],
             ),
           ),
@@ -323,11 +322,11 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
             ),
             Padding(
               padding: EdgeInsets.all(16),
-              child: lottoData == null
+              child: (showUnsold ? unsoldLottoData : soldLottoData) == null
                   ? Center(
                       child: CircularProgressIndicator(color: mainColor),
                     )
-                  : lottoData!.data.isEmpty
+                  : (showUnsold ? unsoldLottoData!.data : soldLottoData!.data).isEmpty
                       ? Center(
                           child: Text(
                             showUnsold
@@ -345,9 +344,9 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10,
                           ),
-                          itemCount: lottoData!.data.length,
+                          itemCount: (showUnsold ? unsoldLottoData!.data : soldLottoData!.data).length,
                           itemBuilder: (context, index) {
-                            final lotto = lottoData!.data[index];
+                            final lotto = (showUnsold ? unsoldLottoData!.data : soldLottoData!.data)[index];
                             return Card(
                               elevation: 3,
                               shape: RoundedRectangleBorder(
