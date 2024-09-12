@@ -104,18 +104,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           lastName: _lastNameController.text,
           email: _emailController.text,
         );
-
-        final response = await apiService.updateUser(user.id!, updateData);
-        responseUpdate = CustomerUpdatePutResponse.fromJson(response!);
-        if (responseUpdate != null) {
+        var response = await apiService.updateUser(user.id!, updateData);
+        if (response != null) {
           _showSuccessDialog();
           await _fetchUserData();
         } else {
-          _showErrorDialog('Failed to update user data');
+          _showErrorDialog('An error occurred while updating user data');
         }
       } catch (e) {
         print('Error updating user data: $e');
-        _showErrorDialog('An error occurred while updating user data');
       }
     }
   }
