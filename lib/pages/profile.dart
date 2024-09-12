@@ -108,10 +108,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         if (response != null) {
           _showSuccessDialog();
           await _fetchUserData();
+        } else {
+          _showErrorDialog('An error occurred while updating user data');
         }
       } catch (e) {
         print('Error updating user data: $e');
-        _showErrorDialog('An error occurred while updating user data');
       }
     }
   }
