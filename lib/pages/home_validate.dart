@@ -266,17 +266,32 @@ class _HomeValidateState extends ConsumerState<HomeValidate> {
                                   : Column(
                                       children: [
                                         Image.asset('assets/images/happy.png'),
-                                        const Padding(
+                                        Padding(
                                           padding: EdgeInsets.only(
                                               top: 20, bottom: 10),
-                                          child: Center(
-                                            child: Text(
-                                              'ยินดีด้วยคุณถูกลอตเตอรี่ !',
-                                              style: TextStyle(
-                                                  color: Colors.blue,
-                                                  fontWeight: FontWeight.w900,
-                                                  fontSize: 25),
-                                            ),
+                                          child: Column(
+                                            children: [
+                                              Center(
+                                                child: Text(
+                                                  'ยินดีด้วยคุณถูกลอตเตอรี่ !',
+                                                  style: TextStyle(
+                                                      color: Colors.blue,
+                                                      fontWeight:
+                                                          FontWeight.w900,
+                                                      fontSize: 25),
+                                                ),
+                                              ),
+                                              Center(
+                                                  child: Text(
+                                                'รางวัลที่ ${prizeCheckData['data']['seq']}',
+                                                style: TextStyle(fontSize: 20),
+                                              )),
+                                              Center(
+                                                  child: Text(
+                                                'เงินรางวัล ${prizeCheckData['data']['reward_point']}฿',
+                                                style: TextStyle(fontSize: 20),
+                                              )),
+                                            ],
                                           ),
                                         ),
                                         FilledButton(

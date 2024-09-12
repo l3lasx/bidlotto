@@ -19,6 +19,7 @@ class LottoCard extends StatelessWidget {
   final bool isShowIconCart;
   final String dateLotto;
   final int lottoStatus;
+  final int lottoPrice;
 
   const LottoCard({
     Key? key,
@@ -27,6 +28,7 @@ class LottoCard extends StatelessWidget {
     this.isShowIconCart = true,
     this.dateLotto = "",
     required this.lottoStatus,
+    this.lottoPrice = 0,
   }) : super(key: key);
 
   final Color mainColor = const Color(0xFFE32321);
@@ -104,15 +106,22 @@ class LottoCard extends StatelessWidget {
               Positioned(
                 bottom: 0,
                 right: 6,
-                child: GestureDetector(
-                  onTap: onAdded,
-                  child: Container(
-                    padding: EdgeInsets.all(4),
-                    child: Icon(
-                      Icons.shopping_cart,
-                      color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("฿${lottoPrice}",
+                        style: TextStyle(color: Colors.white, fontSize: 16)),
+                    GestureDetector(
+                      onTap: onAdded,
+                      child: Container(
+                        padding: EdgeInsets.all(4),
+                        child: Icon(
+                          Icons.shopping_cart,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               )
             else
