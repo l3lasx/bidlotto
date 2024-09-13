@@ -109,7 +109,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           _showSuccessDialog();
           await _fetchUserData();
         } else {
-          _showErrorDialog('An error occurred while updating user data');
+          _showErrorDialog('Email already exists');
         }
       } catch (e) {
         print('Error updating user data: $e');
